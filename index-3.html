@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AJ TEAM VIP H4CK</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { height: -webkit-fill-available; }
+        body {
+            width: 100vw; height: 100vh; height: 100dvh;
+            min-height: -webkit-fill-available;
+            overflow: hidden;
+            background: #000;
+            font-family: 'Share Tech Mono', monospace;
+            position: fixed; top: 0; left: 0;
+        }
+
+        /* ── MATRIX CANVAS ── */
+        #matrixCanvas {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0; opacity: 0.13;
+            pointer-events: none;
+        }
+
+        /* ── SCANLINE OVERLAY ── */
+        body::after {
+            content: '';
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                0deg, transparent, transparent 2px,
+                rgba(0,255,65,0.012) 2px, rgba(0,255,65,0.012) 4px
+            );
+            pointer-events: none; z-index: 0;
+        }
+
+        /* ── IFRAMES ── */
+        .game-frame {
+            width: 100%; height: 100%; border: none;
+            position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+            visibility: hidden; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .game-frame.active-frame { visibility: visible; opacity: 1; z-index: 1; }
+
+        /* ── RED ALERT ── */
+        #red-alert {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(255,0,0,0.85);
+            z-index: 999999; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: #fff; font-family: 'Orbitron', sans-serif; text-align: center;
+            animation: redFlash 0.1s infinite alternate;
+            pointer-events: none;
+        }
+        @keyframes redFlash {
+            0%   { background: rgba(255,0,0,0.9); }
+            100% { background: rgba(100,0,0,0.9); }
+        }
+        .glitch-text {
+            font-size: 32px; font-weight: 900; color: #fff;
+            text-shadow: 0 0 10px #fff, 0 0 30px #f00;
+            animation: glitchAnim 0.1s infinite;
+            letter-spacing: 2px; margin-bottom: 16px;
+        }
+        @keyframes glitchAnim {
+            0%   { transform: translate(0); }
+            25%  { transform: translate(-4px, 4px); }
+            50%  { transform: translate(4px, -4px); }
+            75%  { transform: translate(-4px, -4px); }
+            100% { transform: translate(0); }
+        }
+        .timer-red { font-size: 22px; color: #fff; font-weight: 900; }
+
+        /* ── PET BOT ── */
+        #pet-bot {
+            position: absolute; width: 30px; height: 25px;
+            z-index: 10001; pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);
+        }
+        .bot-body {
+            position: relative; width: 18px; height: 18px;
+            background: linear-gradient(135deg, #a855f7, #7c00ff);
+            margin: 0 auto; border-radius: 4px; border: 2px solid #e0aaff;
+            box-shadow: 0 0 12px #a855f7, 0 0 25px rgba(168,85,247,0.4);
+            display: flex; justify-content: center; align-items: center;
+        }
+        .bot-body::before { content: ""; position: absolute; width: 10px; height: 3px; background: #000; border-radius: 2px; top: 4px; }
+        .eye-glow { position: absolute; width: 2px; height: 2px; background: #ffd700; border-radius: 50%; top: 5px; left: 3px; box-shadow: 0 0 5px #ffd700; animation: blink 2s infinite; }
+        .eye-glow.right { left: 9px; }
+        .wing { position: absolute; width: 14px; height: 8px; background: rgba(168,85,247,0.7); top: 3px; border: 1px solid #e0aaff; border-radius: 12px 12px 0 12px; }
+        .wing.left  { left: -11px; transform-origin: right; animation: flapL 0.15s infinite alternate; }
+        .wing.right { right: -11px; transform-origin: left; border-radius: 12px 12px 12px 0; animation: flapR 0.15s infinite alternate; }
+        @keyframes flapL { from { transform: rotate(0deg); } to { transform: rotate(45deg); } }
+        @keyframes flapR { from { transform: rotate(0deg); } to { transform: rotate(-45deg); } }
+        @keyframes blink  { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+        .flying-mode { animation: orbit 6s linear infinite; }
+        @keyframes orbit { 0% { top:-20px;left:-20px; } 25% { top:-20px;left:100%; } 50% { top:100%;left:100%; } 75% { top:100%;left:-20px; } 100% { top:-20px;left:-20px; } }
+        .sitting-mode { top:-25px!important; left:50%!important; transform:translateX(-50%); animation:hover 2s ease-in-out infinite; }
+        @keyframes hover { 0%,100% { margin-top:0; } 50% { margin-top:-3px; } }
+        .bot-pulse { animation: botPulse 0.5s ease; }
+        @keyframes botPulse { 0% { transform:translateX(-50%) scale(1); } 50% { transform:translateX(-50%) scale(1.3); filter:hue-rotate(60deg); } 100% { transform:translateX(-50%) scale(1); } }
+
+        /* ── OVERLAY WRAPPER ── */
+        #overlay-wrapper {
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            z-index: 1000; width: 200px; touch-action: none;
+        }
+
+        /* ── ULTRA HACKER BORDER ── */
+        .rgb-border-wrap {
+            padding: 2px; border-radius: 14px;
+            background: linear-gradient(45deg,
+                #7c00ff, #a855f7, #ff00c8,
+                #ffd700, #a855f7, #7c00ff,
+                #ff00c8, #a855f7, #7c00ff
+            );
+            background-size: 400%;
+            animation: borderSpin 8s linear infinite;
+            box-shadow:
+                0 0 20px rgba(168,85,247,0.7),
+                0 0 40px rgba(168,85,247,0.3),
+                0 0 60px rgba(124,0,255,0.2);
+        }
+        @keyframes borderSpin {
+            0%   { background-position: 0 0; }
+            50%  { background-position: 400% 0; }
+            100% { background-position: 0 0; }
+        }
+
+        /* ── INNER BOX ── */
+        #overlay-box {
+            position: relative; width: 100%; min-height: 160px;
+            background: linear-gradient(160deg, rgba(8,0,20,0.98), rgba(0,0,0,0.99));
+            border-radius: 12px; padding: 10px;
+            cursor: grab; user-select: none;
+            overflow: hidden; touch-action: none;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+
+        /* dot grid */
+        #overlay-box::after {
+            content: ""; position: absolute; top:0; left:0; width:100%; height:100%;
+            background-image: radial-gradient(rgba(168,85,247,0.12) 1px, transparent 1px);
+            background-size: 10px 10px; opacity: 0.6; z-index: 0; pointer-events: none;
+        }
+
+        /* ── SCANLINE IN BOX ── */
+        .scanline {
+            position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, #a855f7, #ffd700, #a855f7, transparent);
+            animation: scan 2s linear infinite; z-index: 2; opacity: 0.8;
+        }
+        @keyframes scan { 0% { top:-5%; } 100% { top:110%; } }
+
+        /* ── CORNER BRACKETS ── */
+        .corner { position: absolute; width: 10px; height: 10px; z-index: 3; }
+        .corner.tl { top:4px; left:4px; border-top:2px solid #a855f7; border-left:2px solid #a855f7; }
+        .corner.tr { top:4px; right:4px; border-top:2px solid #a855f7; border-right:2px solid #a855f7; }
+        .corner.bl { bottom:4px; left:4px; border-bottom:2px solid #a855f7; border-left:2px solid #a855f7; }
+        .corner.br { bottom:4px; right:4px; border-bottom:2px solid #a855f7; border-right:2px solid #a855f7; }
+
+        /* ── TITLE ── */
+        .title-main {
+            text-align: center; font-family: 'Orbitron', sans-serif;
+            font-size: 10.5px; font-weight: 900; color: #ffd700;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            text-shadow: 0 0 8px #ffd700, 0 0 20px rgba(255,215,0,0.5), 0 0 35px rgba(168,85,247,0.4);
+            position: relative; z-index: 1;
+            border-bottom: 1px solid rgba(168,85,247,0.4);
+            padding-bottom: 4px; margin-bottom: 2px;
+            animation: titleGlitch 5s infinite;
+        }
+        @keyframes titleGlitch {
+            0%,95%,100% { text-shadow: 0 0 8px #ffd700, 0 0 20px rgba(255,215,0,0.5); }
+            96% { text-shadow: -2px 0 #ff00c8, 2px 0 #ffd700; transform: translateX(-1px); }
+            97% { text-shadow: 2px 0 #7c00ff, -2px 0 #ffd700; transform: translateX(1px); }
+            98% { text-shadow: 0 0 8px #ffd700; transform: translateX(0); }
+        }
+        .title-sub {
+            text-align: center; font-size: 7.5px; font-weight: 700;
+            color: #a855f7; letter-spacing: 2px;
+            margin: 3px 0 7px; position: relative; z-index: 1;
+            text-shadow: 0 0 6px rgba(168,85,247,0.6);
+        }
+
+        /* ── SERVER BUTTONS ── */
+        .server-row { display: flex; gap: 5px; margin-bottom: 8px; position: relative; z-index: 2; }
+        .btn-server {
+            flex: 1; background: rgba(168,85,247,0.08);
+            border: 1px solid rgba(168,85,247,0.5);
+            border-radius: 4px; color: #a855f7;
+            font-size: 7.5px; font-weight: bold; padding: 5px;
+            cursor: pointer; font-family: 'Orbitron', sans-serif; transition: 0.3s;
+            letter-spacing: 0.5px;
+        }
+        .btn-server.active {
+            background: linear-gradient(90deg, rgba(168,85,247,0.3), rgba(124,0,255,0.4));
+            color: #ffd700; border-color: #a855f7;
+            box-shadow: 0 0 10px rgba(168,85,247,0.5), inset 0 0 8px rgba(168,85,247,0.1);
+        }
+
+        /* ── LOGIN ── */
+        #login-screen {
+            display: flex; flex-direction: column; align-items: center;
+            position: relative; z-index: 1; animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+
+        .password-input {
+            width: 100%; background: rgba(0,0,0,0.8);
+            border: 1px solid rgba(168,85,247,0.6);
+            border-radius: 5px; padding: 8px;
+            color: #a855f7; font-size: 10px; outline: none;
+            margin-bottom: 7px; text-align: center;
+            font-family: 'Orbitron', sans-serif; transition: 0.3s;
+            letter-spacing: 2px;
+            box-shadow: inset 0 0 8px rgba(168,85,247,0.1);
+        }
+        .password-input::placeholder { color: rgba(168,85,247,0.4); font-size: 8px; }
+        .password-input:focus {
+            box-shadow: 0 0 12px rgba(168,85,247,0.6), inset 0 0 8px rgba(168,85,247,0.1);
+            border-color: #ffd700; color: #ffd700;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(90deg, #7c00ff, #a855f7, #7c00ff);
+            background-size: 200%;
+            color: #fff; font-weight: 900; font-size: 9.5px;
+            text-transform: uppercase; border: none; border-radius: 5px;
+            padding: 7px; cursor: pointer;
+            box-shadow: 0 0 15px rgba(168,85,247,0.6);
+            font-family: 'Orbitron', sans-serif; margin-bottom: 7px;
+            transition: 0.2s; letter-spacing: 1px;
+            animation: btnPulse 2s infinite;
+        }
+        @keyframes btnPulse {
+            0%,100% { box-shadow: 0 0 12px rgba(168,85,247,0.5); background-position: 0%; }
+            50%      { box-shadow: 0 0 22px rgba(168,85,247,0.9); background-position: 100%; }
+        }
+        .btn-login:active { transform: scale(0.96); }
+
+        .error-msg { display:none; color:#ff003c; font-size:9px; margin-bottom:7px; font-weight:bold; text-shadow:0 0 5px #ff003c; text-align:center; }
+
+        .btn-telegram {
+            width: 100%; background: transparent;
+            border: 1px dashed rgba(255,215,0,0.6);
+            color: #ffd700; font-size: 8.5px; font-weight: bold;
+            font-family: 'Share Tech Mono', monospace;
+            padding: 6px; border-radius: 5px; text-decoration: none;
+            display: flex; align-items: center; justify-content: center;
+            gap: 5px; transition: 0.3s; animation: tgPulse 2s infinite; margin-top: 1px;
+        }
+        .btn-telegram i { font-size: 11px; }
+        .btn-telegram:active { background: rgba(255,215,0,0.08); }
+        @keyframes tgPulse {
+            0%,100% { box-shadow: 0 0 0 transparent; }
+            50%      { box-shadow: 0 0 10px rgba(255,215,0,0.4); }
+        }
+
+        /* ── PREDICTION ── */
+        #pred-section { display:none; position:relative; z-index:1; animation:fadeIn 0.5s ease; }
+
+        .info-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(168,85,247,0.07);
+            padding: 4px 7px; border-radius: 4px;
+            border: 1px solid rgba(168,85,247,0.35);
+            margin-bottom: 8px;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.5), 0 0 6px rgba(168,85,247,0.1);
+        }
+        .period-text {
+            font-size: 9.5px; color: #e0aaff;
+            font-family: 'Orbitron', sans-serif; font-weight: 700;
+            text-shadow: 0 0 5px rgba(224,170,255,0.5);
+        }
+        .timer-text {
+            font-size: 11px; font-weight: 900; color: #a855f7;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px #a855f7, 0 0 20px rgba(168,85,247,0.5);
+        }
+
+        /* ── PREDICTION BOX ── */
+        .prediction-box {
+            text-align: center; margin-bottom: 8px; padding: 10px 5px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 8px;
+            border: 1px solid rgba(168,85,247,0.25);
+            box-shadow:
+                inset 0 0 15px rgba(168,85,247,0.05),
+                0 0 10px rgba(168,85,247,0.1);
+            position: relative; overflow: hidden;
+        }
+        /* inner glow sweep */
+        .prediction-box::before {
+            content: '';
+            position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at center, rgba(168,85,247,0.06) 0%, transparent 60%);
+            animation: glowSweep 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes glowSweep {
+            0%,100% { opacity: 0.5; transform: scale(0.8); }
+            50%      { opacity: 1;   transform: scale(1.1); }
+        }
+
+        .pred-value {
+            font-family: 'Orbitron', sans-serif; font-weight: 900;
+            font-size: 28px; letter-spacing: 2px; display: block;
+            margin-bottom: 3px; transition: 0.3s;
+            animation: predPulse 1.5s infinite;
+            text-transform: uppercase; position: relative; z-index: 1;
+        }
+        @keyframes predPulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.06); } }
+        .pred-small {
+            color: #a855f7;
+            text-shadow: 0 0 15px rgba(168,85,247,0.9), 0 0 30px rgba(168,85,247,0.5), 0 0 50px rgba(168,85,247,0.2);
+        }
+        .pred-big {
+            color: #ffd700;
+            text-shadow: 0 0 15px rgba(255,215,0,0.9), 0 0 30px rgba(255,215,0,0.5), 0 0 50px rgba(255,215,0,0.2);
+        }
+
+        .lvl-badge {
+            background: rgba(168,85,247,0.12);
+            border: 1px solid rgba(168,85,247,0.5);
+            padding: 2px 8px; border-radius: 20px;
+            font-weight: bold; margin-top: 5px; font-size: 7.5px;
+            color: #e0aaff; display: inline-block;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 6px rgba(168,85,247,0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .opp-label {
+            font-size: 7px; color: rgba(255,215,0,0.7);
+            margin-top: 5px; font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .num-row { display: flex; justify-content: center; gap: 14px; margin-top: 5px; }
+        .num-circle {
+            width: 28px; height: 28px; line-height: 26px;
+            border: 2px solid #ffd700; border-radius: 50%;
+            font-weight: 900; background: rgba(0,0,0,0.8);
+            color: #ffd700; font-size: 13px;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: 0 0 10px rgba(255,215,0,0.6), inset 0 0 6px rgba(255,215,0,0.1);
+            animation: numPulse 2s infinite;
+        }
+        @keyframes numPulse {
+            0%,100% { box-shadow: 0 0 10px rgba(255,215,0,0.6); }
+            50%      { box-shadow: 0 0 20px rgba(255,215,0,0.9), 0 0 35px rgba(255,215,0,0.3); }
+        }
+
+        /* ── STREAK ── */
+        .streak-box {
+            display: flex; justify-content: space-between;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(168,85,247,0.2);
+            border-radius: 5px; padding: 5px 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 8.5px; font-weight: bold;
+            position: relative;
+        }
+        .streak-box::after {
+            content: ""; position: absolute; bottom: -1px; left: 10%; width: 80%; height: 1px;
+            background: linear-gradient(90deg, transparent, #a855f7, transparent);
+        }
+        .s-sig  { color: #888; }
+        .s-win  { color: #39ff14; text-shadow: 0 0 6px #39ff14; }
+        .s-loss { color: #ff003c; text-shadow: 0 0 6px #ff003c; }
+
+        .anim-update { animation: flashUp 0.5s ease; }
+        @keyframes flashUp {
+            0%   { transform:scale(1); filter:brightness(1); }
+            50%  { transform:scale(1.05); filter:brightness(1.6); }
+            100% { transform:scale(1); filter:brightness(1); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- MATRIX CANVAS -->
+<canvas id="matrixCanvas"></canvas>
+
+<!-- IFRAMES -->
+<iframe id="frame-game1" class="game-frame active-frame" src="https://21bdwin24.com/register?inviteCode=JE3649N&from=web"></iframe>
+<iframe id="frame-game2" class="game-frame" src="https://dkwin9.com/#/register?invitationCode=228211895134"></iframe>
+
+<!-- RED ALERT -->
+<div id="red-alert">
+    <div class="glitch-text" id="alert-reason">ACCESS DENIED</div>
+    <div class="timer-red">LOCKED: <span id="alert-countdown">3</span>s</div>
+</div>
+
+<!-- MAIN OVERLAY -->
+<div id="overlay-wrapper">
+    <div id="pet-bot" class="flying-mode">
+        <div class="wing left"></div>
+        <div class="bot-body">
+            <div class="eye-glow"></div>
+            <div class="eye-glow right"></div>
+        </div>
+        <div class="wing right"></div>
+    </div>
+
+    <div class="rgb-border-wrap">
+        <div id="overlay-box">
+            <div class="scanline"></div>
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+
+            <div class="title-main">AJ TEAM VIP H4CK</div>
+            <div class="title-sub">◈ CYBER SIGNAL ENGINE ◈</div>
+
+            <div class="server-row">
+                <button class="btn-server active" onclick="switchGame('frame-game1',this)">BD WIN</button>
+                <button class="btn-server" onclick="switchGame('frame-game2',this)">DK WIN</button>
+            </div>
+
+            <!-- LOGIN -->
+            <div id="login-screen">
+                <input class="password-input" type="password" id="pw-input" placeholder="[ ACCESS KEY ]" autocomplete="off" />
+                <div class="error-msg" id="error-msg">INVALID KEY!</div>
+                <button class="btn-login" onclick="doLogin()">⚡ AUTHENTICATE ⚡</button>
+                <a href="https://t.me/alamin_jahid" target="_blank" class="btn-telegram">
+                    <i class="fab fa-telegram-plane"></i> পাসওয়ার্ড পেতে মেসেজ করুন
+                </a>
+            </div>
+
+            <!-- PREDICTION -->
+            <div id="pred-section">
+                <div class="info-bar">
+                    <span class="period-text" id="period-display">P: ----</span>
+                    <span class="timer-text" id="countdown">30s</span>
+                </div>
+                <div class="prediction-box" id="anim-box">
+                    <span class="pred-value pred-small" id="pred-label">WAIT</span>
+                    <div id="mLevel" class="lvl-badge">MARTINGALE: L1</div>
+                    <div class="opp-label">⟁ TARGET NUMBERS ⟁</div>
+                    <div class="num-row" id="numRow">
+                        <div class="num-circle">?</div>
+                        <div class="num-circle">?</div>
+                    </div>
+                </div>
+                <div class="streak-box">
+                    <div class="s-sig">SIG: <span id="sig-count">0</span></div>
+                    <div class="s-win">WIN: <span id="win-count">0</span></div>
+                    <div class="s-loss">LOSS: <span id="loss-count">0</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ── MATRIX RAIN ──
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    let drops = [];
+    function initMatrix() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        drops = Array(Math.floor(canvas.width / 16)).fill(1);
+    }
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(0,0,0,0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#a855f7';
+        ctx.font = '13px Share Tech Mono';
+        drops.forEach((y, i) => {
+            const ch = String.fromCharCode(0x30A0 + Math.random() * 96);
+            ctx.fillText(ch, i * 16, y * 16);
+            if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        });
+    }
+    initMatrix();
+    setInterval(drawMatrix, 55);
+    window.addEventListener('resize', initMatrix);
+
+    // ── GAME SWITCH ──
+    function switchGame(frameId, btn) {
+        document.querySelectorAll('.game-frame').forEach(f => f.classList.remove('active-frame'));
+        document.getElementById(frameId).classList.add('active-frame');
+        document.querySelectorAll('.btn-server').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    // ── TOUCH SOUND ──
+    function playTringSound() {
+        const a = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        a.volume = 0.4;
+        a.play().catch(() => {});
+    }
+    document.addEventListener('pointerdown', playTringSound);
+
+    const emergencySiren = new Audio('https://assets.mixkit.co/active_storage/sfx/1640/1640-preview.mp3');
+    emergencySiren.loop = true;
+
+    const bot = document.getElementById('pet-bot');
+    const B_NUMS = [8,5,9,7,6], S_NUMS = [4,1,0,2,3];
+    let lastP = null, nextP = null, targetNums = [], currentLevel = 1;
+    let sigCount = 0, wins = 0, losses = 0;
+
+    // ── RED ALERT ──
+    function triggerRedAlert(reason, wrongKey) {
+        document.getElementById('overlay-wrapper').style.display = 'none';
+        document.getElementById('alert-reason').innerText = reason;
+        document.getElementById('red-alert').style.display = 'flex';
+        emergencySiren.currentTime = 0;
+        emergencySiren.play().catch(() => {});
+        let count = 2;
+        document.getElementById('alert-countdown').innerText = count;
+        const timer = setInterval(() => {
+            count--;
+            if (count > 0) {
+                document.getElementById('alert-countdown').innerText = count;
+            } else {
+                clearInterval(timer);
+                const msg = encodeURIComponent(`UID :\nNAME :\nKEY WRONG : ${wrongKey}`);
+                const link = `https://t.me/alamin_jahid?text=${msg}`;
+                try { window.top.location.href = link; } catch(e) { window.location.href = link; }
+            }
+        }, 1000);
+    }
+
+    var _0x4f2a=function(){var _a=[72,74,32,84,69,65,77];return String.fromCharCode(..._a);};
+    var _0x3b1c=function(){return new Date()['\x67\x65\x74\x44\x61\x74\x65']();};
+    var _0x7e9d=function(){return _0x4f2a()+_0x3b1c();};
+    var _0x2a8f='\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64';
+    var _0x1c3e='\x71\x75\x65\x72\x79\x53\x65\x6c\x65\x63\x74\x6f\x72';
+    function _0x5d4b(_0xk){var _0xr=document[_0x2a8f]('\x70\x77\x2d\x69\x6e\x70\x75\x74')['\x76\x61\x6c\x75\x65']['\x74\x72\x69\x6d']();if(!_0xr){triggerRedAlert("EMPTY KEY DETECTED","EMPTY");return;}document[_0x1c3e]('\x2e\x62\x74\x6e\x2d\x6c\x6f\x67\x69\x6e')['\x69\x6e\x6e\x65\x72\x54\x65\x78\x74']='\x56\x45\x52\x49\x46\x59\x49\x4e\x47\x2e\x2e\x2e';setTimeout(function(){if(_0xr===_0x7e9d()){document[_0x2a8f]('\x6c\x6f\x67\x69\x6e\x2d\x73\x63\x72\x65\x65\x6e')['\x73\x74\x79\x6c\x65']['\x64\x69\x73\x70\x6c\x61\x79']='\x6e\x6f\x6e\x65';document[_0x2a8f]('\x70\x72\x65\x64\x2d\x73\x65\x63\x74\x69\x6f\x6e')['\x73\x74\x79\x6c\x65']['\x64\x69\x73\x70\x6c\x61\x79']='\x62\x6c\x6f\x63\x6b';bot['\x63\x6c\x61\x73\x73\x4c\x69\x73\x74']['\x72\x65\x6d\x6f\x76\x65']('\x66\x6c\x79\x69\x6e\x67\x2d\x6d\x6f\x64\x65');bot['\x63\x6c\x61\x73\x73\x4c\x69\x73\x74']['\x61\x64\x64']('\x73\x69\x74\x74\x69\x6e\x67\x2d\x6d\x6f\x64\x65');startEngine();}else{triggerRedAlert("INVALID KEY",_0xr);document[_0x1c3e]('\x2e\x62\x74\x6e\x2d\x6c\x6f\x67\x69\x6e')['\x69\x6e\x6e\x65\x72\x54\x65\x78\x74']='\u26a1 AUTHENTICATE \u26a1';}},800);}
+    function doLogin(){_0x5d4b();}
+
+    function triggerAnimation() {
+        bot.classList.add('bot-pulse');
+        setTimeout(() => bot.classList.remove('bot-pulse'), 500);
+        const animBox = document.getElementById('anim-box');
+        animBox.classList.remove('anim-update');
+        void animBox.offsetWidth;
+        animBox.classList.add('anim-update');
+    }
+
+    // ══════════════════════════════════════
+    // SIGNAL ALGORITHMS — 100% ORIGINAL
+    // ══════════════════════════════════════
+    const PDB={"SSBSSBSBB":"BIG","BSBSBBSBS":"SMALL","BSBSBBBSS":"BIG","SSSBBBSSS":"SMALL","SSSBSBBBS":"SMALL","SBSSBSSBB":"BIG","SBSSBSSBS":"BIG","SBSBSSSBS":"SMALL","SBBSBSSBS":"BIG","BBSBBSSBB":"SMALL","BSBBSBSSS":"BIG","SBSBBSSBB":"SMALL","BBBSBSSBS":"BIG","SBSSBBSBS":"SMALL","BSSBSSSBS":"SMALL","BBSBSBBSB":"BIG","SBBSBSSSS":"BIG","SBSBBBSBB":"SMALL","BSBBBBSBB":"BIG","BSBSSBSBB":"SMALL","BBBBBBBBB":"BIG","BSBSBBSBB":"BIG","SSSBBBBBB":"BIG","BSSBBBSBB":"SMALL","SBBSBBBSB":"SMALL","BSSBBBSBS":"SMALL","SSBSBBBBS":"SMALL","SSBBSBBSB":"BIG","SSBSSBSSS":"SMALL","SBSBSSBSB":"BIG","BSBBSSSSS":"SMALL","SSSBBBSBB":"SMALL","SBSBBSBSS":"SMALL","SBSSBSSSS":"SMALL","BBSBBSBBB":"SMALL","SSSSBBSSB":"BIG","BBSSBSBSS":"BIG","SSBBBSBSB":"BIG","SBBBSBBBS":"SMALL","SBBBBBBSS":"BIG","SBBSSSSSB":"BIG","SBSBBSBBS":"SMALL","BBSSSSBSB":"SMALL","BSSBSBBSB":"SMALL","BBBBSSBSS":"SMALL","BBBSSBBSB":"BIG","BSBSSBBBS":"BIG","SSBBSBSBB":"BIG","SBBBSBSBS":"SMALL","BSBBSSBBB":"SMALL","BSSSBSBSB":"SMALL","BBBBBSBSB":"BIG","BSSSSSBBS":"BIG","SSBSBBBSB":"SMALL","SSSSSBSSB":"SMALL","BSSSSBBBB":"SMALL","BBBBBBBSB":"BIG","BSSSBSSSB":"SMALL","SBBSBSBBB":"SMALL","SSSBBBBSS":"SMALL","BBBSSBSBB":"BIG","SSBSBSBBB":"BIG","BBBBSSSBB":"BIG","SBSSBBSSB":"SMALL","BBSSBSBBS":"BIG","SSSBBSBSS":"SMALL","BBSBBBSSB":"BIG","BBBBSSBBS":"BIG","BBBSBBSSS":"BIG","SBBSBBBBS":"BIG","BBBSSBBBS":"BIG","BSSBBSSBB":"BIG","SBBBSBSSB":"BIG","BSSBBSSBS":"BIG","SSBBSBBBB":"SMALL","BSBBSBBSS":"BIG","BBSSBBBBB":"BIG","SBBSBBBSS":"BIG","BSBSBSSSB":"SMALL","SSBBSBSSS":"BIG","SBBSSSBBS":"BIG","SBSSBBSBB":"SMALL","BSSBBSSSS":"BIG","SSSBBSSBB":"SMALL","BBSSBSSSB":"SMALL","SBSBSBBSS":"BIG","BSBSSSBBS":"SMALL","SSBSBSSBS":"SMALL","BBBSBBBBB":"BIG","BBBBSBSSB":"BIG","BSSSSBBSB":"BIG","SSSBBSBBB":"BIG","BBSBBBSBS":"SMALL","SBSBBBSSS":"BIG","SBBSSBSBB":"BIG","BBSSBBSSS":"SMALL","SBBBSSSBS":"SMALL","BBBBBBSSB":"BIG","SBSBBBSBS":"BIG","BSSBBSBBB":"SMALL","SSBSSSSBB":"SMALL","BBSBBBBBS":"SMALL","BSSBSSSSB":"SMALL","SBBBSSSSS":"BIG","BSBBBBSBS":"BIG","BSBSSSSBS":"BIG","BBBSSSSBB":"BIG","BSBSSBBSS":"BIG","SSSSBSBSS":"BIG","SSBBSSBBS":"SMALL","SSBSSSBSB":"BIG","SSSBSSBSB":"BIG","SSBBBSSBB":"BIG","BSSSSBSBS":"SMALL","SBBSSBBSS":"SMALL","SSSSSSBSB":"BIG","BSBBSBBBB":"SMALL","SSSSBSBBS":"BIG","SSBBSSBSS":"BIG","BBSBSSBSB":"SMALL","SSBSSBBSB":"BIG","BBSSSBBSB":"SMALL","SBBSSBBBS":"SMALL","SBBBSSBBB":"BIG","SBSSBSBSB":"BIG","SBSSSSBBS":"BIG","BBSBBSBSB":"SMALL","SSSSSBBSS":"SMALL","BSSSBBBSB":"BIG","BBBSBSBSS":"BIG","BBBSSSBSS":"BIG","BSBBBBBBS":"BIG","BSSBBBBBS":"BIG","SSBSBBSBS":"SMALL","BBBBSBSBS":"SMALL","BSSSSBSSB":"BIG","BSBSBBBSB":"BIG","BSBBBSSBS":"SMALL","SSSBBBSSB":"SMALL","BSSSSSBSB":"SMALL","BSSBBBBSS":"BIG","SSBSBBSSS":"BIG","SSBSSBBBS":"BIG","SBSBBSSBS":"BIG","BBBSBSSBB":"BIG","BSBSSBSBS":"SMALL","SSSSBBBBB":"BIG","BBSSBSSBS":"SMALL","SBBSBSSSB":"SMALL","BBBBBSSBB":"BIG","BSBBBSSSS":"SMALL","SBBSSSBSB":"SMALL","SSBBBBSBS":"BIG","BBBSBBSBB":"BIG","BSBBBBBSB":"BIG","BSSSSSSBS":"BIG","SSBSBBBBB":"BIG","SBSBSSSBB":"BIG","BSBSSBSSS":"BIG","SBBBSBBSS":"BIG","BSBBSSSSB":"SMALL","SSSBBBSBS":"SMALL","SSSBSSBSS":"SMALL","BSBBBSBBB":"BIG","BSSSSSSSS":"BIG","BSSBSSSBB":"BIG","SSSSBBSSS":"BIG","BBSSSBBSS":"SMALL","SSBBBBSSB":"BIG","SBBSSSSSS":"SMALL","SBSBBSBBB":"SMALL","BBSSBBSBS":"SMALL","SSSSBBSBS":"SMALL","BSSBSBBSS":"BIG","BBBBSSBSB":"BIG","SBBSBBSBS":"BIG","BBBBSSSBS":"BIG","BBSSSSSSB":"SMALL","BBBBBSBBS":"BIG","BSBSSBBBB":"SMALL","SBBBSBSBB":"BIG","SSBSBSBBS":"SMALL","BSSBSBBBS":"BIG","SBSSSBSBS":"BIG","BSSSSSBBB":"BIG","SSBSBBBSS":"SMALL","BBSBSBSBS":"SMALL","BSBBSSSBS":"SMALL","SSBBSBSSB":"BIG","SBSSSSSBS":"SMALL","SSSSSBBSB":"SMALL","SBBBSSBBS":"BIG","BBBBBSBSS":"BIG","SBSBSSSSB":"SMALL","SSSBBSBSB":"SMALL","SSBBSBSBS":"BIG","BBSSBSSBB":"BIG","SBSSBBBSB":"SMALL","SSBSBSBSS":"SMALL","BBBSBBSSB":"SMALL","SBBBBBBBS":"SMALL","SBSBBBBBS":"SMALL","SBSBSBBBB":"BIG","BBSSBBBBS":"BIG","BSSSSSBSS":"SMALL","SBBBBBSBB":"BIG","SBBBBSBSS":"SMALL","BBBSBBSBS":"SMALL","BBSBSBSSB":"BIG","SBSBBBBSS":"SMALL","BSSBBSSSB":"SMALL","BBSSBSBBB":"BIG","BBBSBSBBS":"BIG","BSBSBSBSB":"SMALL","BSBBBSSSB":"SMALL","BSBSSSSSS":"SMALL","SBBBSBSSS":"SMALL","BSSSSBBBS":"SMALL","SSBSBSSBB":"SMALL","SSSBSBSSB":"BIG","SSSSBSSBS":"SMALL","SSSBBSBBS":"BIG","SSBSBSSSB":"BIG","BSSSSBBSS":"BIG","SBBSSBSBS":"SMALL","BSBBSBBSB":"SMALL","BSBBBSBSB":"BIG","SSSSBSSSS":"SMALL","BBBBBBSSS":"BIG","SSSBSBBSS":"SMALL","BBSSSBSBB":"BIG","SBBSSBSSS":"BIG","BBSSBSSSS":"SMALL","BBSSBBSBB":"BIG","SBBBSSSSB":"BIG","BBSBSBBSS":"BIG","SBBBBSBBB":"BIG","BSBSSSSBB":"SMALL","SSBSBBSBB":"SMALL","SSBBBSBSS":"BIG","SSBSBSSSS":"BIG","SBSBSSSSS":"SMALL","BSBBBBSSS":"BIG","SSSSBSBBB":"SMALL","SSBBSSBSB":"SMALL","BBSBSSBSS":"SMALL","SBBBSBBBB":"SMALL","SSSSSSSSB":"BIG","SSBBBSBBS":"SMALL","SBBSSBBBB":"BIG","SSBBBBBSB":"SMALL","BBBBSBBSB":"SMALL","SBSBSBBBS":"SMALL","SBSSSSBBB":"SMALL","BBSSSBBBS":"BIG","SSSBSBSBS":"SMALL","BBSBSSBBB":"BIG","BBBSBSBSB":"SMALL","SSBBBSSSS":"BIG","SBBBBSSBS":"SMALL","BSBBBBBBB":"SMALL","BBSBSSSBB":"SMALL","BSSSSBSSS":"SMALL","SBSBBSSSS":"SMALL","SBBBSSBSB":"SMALL","BBBSBBBSS":"BIG","BSSBBBBSB":"BIG","SBSBBSBSB":"BIG","SSBSBBSSB":"BIG","BSBSBBSSB":"BIG","BSBBSSBSB":"BIG","SBSBBBBBB":"SMALL","SBBSBBSBB":"SMALL","SSSSBBBBS":"BIG","SBSSSSBSS":"BIG","SSBBBBBBB":"BIG","BBBBBSSBS":"BIG","SBSBBSSSB":"BIG","SBBSBSBSB":"BIG","SSSSBBBSS":"SMALL","BSBBBBBSS":"BIG","SBSSSBBBS":"BIG","BBSSSSBBB":"SMALL","SBBSSSBSS":"BIG","BSBSSBSSB":"BIG","SBBBSBBSB":"SMALL","BSSBSBSSS":"BIG","SBBSSSSBB":"BIG","SBSSSBBSS":"BIG","BSSSSSSSB":"SMALL","BSSSBSBBB":"BIG","SSBBBBSSS":"SMALL","BSBBBSBSS":"SMALL","SSSSBBSBB":"BIG","BBSSSSSSS":"BIG","BBBBBSBBB":"BIG","SBBSBBBBB":"BIG","BBBBSSSSB":"SMALL","SSSBSSSSS":"BIG","BSSBSBBBB":"SMALL","SBSSSBSBB":"BIG","SBSBSSBBB":"SMALL","BBSSSSSBS":"SMALL","SBBBBBSSS":"SMALL","SBBSBSBBS":"BIG","BBSBSBSBB":"SMALL","BBBBBSSSS":"BIG","BBBSSBSBS":"SMALL","BSBBBSSBB":"SMALL","SSBBBBSBB":"BIG","BBBSSSBBS":"SMALL","BSSBSBSBB":"BIG","BSSSBSSBS":"SMALL","SSBBSBBSS":"SMALL","BSBSBSSBB":"SMALL","SSSSSBBBS":"SMALL","SSSBSSBBB":"SMALL","SSBSBSBSB":"SMALL","SSBSSSBBS":"BIG","SBBBBBBBB":"SMALL","SBSBSBBSB":"SMALL","SSSBSSSBB":"BIG","SBSSBBBBS":"SMALL","SBSSBSBBS":"BIG","SBSSBSSSB":"BIG","SBSBSBSBS":"BIG","BBBBBBBBS":"SMALL","SBSBBBBSB":"BIG","SBBSBBSSB":"SMALL","BBBSSBSSB":"SMALL","BBSSBBBSB":"SMALL","SSSSSBBBB":"BIG","BSSBBSBSB":"SMALL","BBBBBBBSS":"BIG","BSBSSSBSB":"BIG","BSSBBBSSS":"BIG","BSBSBSBBS":"BIG","BSSBSSBSS":"BIG","BSBBSBSBB":"SMALL","SSBBBSSBS":"SMALL","BBBBBBSBS":"SMALL","BSBSBSSBS":"BIG","SSSBBSSSB":"BIG","SSSSBSSSB":"SMALL","BSSBSBSBS":"SMALL","SSSSSSBBB":"SMALL","BBSSSBSBS":"SMALL","SBBSSBSSB":"SMALL","BBSBBSSSB":"BIG","BSSSBBBSS":"SMALL","SBBBSSBBS":"BIG","SBSBSBSSS":"SMALL","BBBBBBSBB":"BIG","SBSSSSSSB":"BIG","SSSSBSBSB":"BIG","BBSSSBSSS":"SMALL","SBSSBSBBB":"BIG","BSSSBBSBS":"BIG","SSSSSSBSS":"BIG","BBSBSBSSS":"SMALL","BBBSSSSSS":"SMALL","BBBSBSSSS":"BIG","BSSSBBSSS":"BIG","SSSSSSSSS":"BIG","SSBBBSBBB":"BIG","BSBBSBSSB":"SMALL","SSBBSSSSB":"BIG","BBBBSBBSS":"SMALL","SBSBSBBBB":"BIG","BBSBBSBBS":"SMALL","BSSSSSSBB":"SMALL","BSBSBBBBB":"BIG","SSSSSSSBS":"BIG","BBSSSBBBB":"SMALL","SSBBSSSBB":"BIG","SSSBSBSBB":"BIG","BBSSBBBSS":"SMALL","BBBBSBBBS":"BIG","SSBSSBSBS":"SMALL","BBBSSSBBB":"SMALL","SSSBBBBSB":"BIG","SSSBSBBBB":"BIG","BBSBSSSBS":"SMALL","BSSSBBBBB":"SMALL","SBBSBSSBB":"SMALL","BBSBBSSBS":"BIG","BSBSBBSSS":"BIG","BSSSBBSBB":"BIG","BSSBBBSSB":"SMALL","SBBBBBBSB":"SMALL","BSBBSSSBB":"BIG","SSSBBBBBS":"SMALL","SSSBSBSSS":"SMALL","SBSSBBBSS":"BIG","SSBSSBSSB":"SMALL","SBBBBSSSS":"BIG","BBBSBSSSB":"SMALL","SSBBBBBSS":"BIG","BBSBSSSSS":"BIG","BBSSSSBBS":"SMALL","BBBBBSSSB":"SMALL","BSBBSSBSS":"SMALL","BBSSBSBSB":"SMALL","BBBBSSBBB":"SMALL","SBSBSSBSS":"SMALL","BSSBSBSSB":"SMALL","BSSBSSBBB":"BIG","SBSSSBBSB":"SMALL","BSBSSBBSB":"SMALL","BBSSSSBSS":"SMALL","BSSSBSBBS":"SMALL","BBBSSBBSS":"BIG","SSSSSBSBS":"SMALL","BSSSSBSBB":"SMALL","SSBBBBBBS":"SMALL","BSBBSSBBS":"SMALL","BSSSBSBSS":"SMALL","SSBSSSSBS":"BIG","SSSSSBSSS":"BIG","SBSSSBSSB":"SMALL","BBBBSSSSS":"SMALL","SSSBSSSSB":"SMALL","SSBSSSSSS":"BIG","SBBBBBSSB":"SMALL","SBBSSSBBB":"SMALL","SBSSBBSSS":"SMALL","SSSBSSBBS":"SMALL","SBSSSSSSS":"BIG","BBSBBBSSS":"BIG","BBSBSBBBS":"BIG","BSSSBSSBB":"SMALL","BSBSSSBBB":"BIG","BBSBSSBBS":"BIG","BBBSSBBBB":"SMALL","BSBBBSBBS":"BIG","SBSSSSSBB":"BIG","BBSSSSSBB":"BIG","SBBSBSBSS":"SMALL","SSBBSBBBS":"SMALL","SBSBSSBBS":"SMALL","SBBSSSSBS":"SMALL","SSBSSSBBB":"BIG","BSBSBSSSS":"BIG","SSSBSSSBS":"BIG","SBSSBBBBB":"BIG","BSSBSSBBS":"SMALL","SBBSSBBSB":"BIG","SSSBBSSBS":"SMALL","BBSBBBBBB":"BIG","SSBSSBBBB":"SMALL","SSSSBBBSB":"SMALL","SBBBBSBBS":"BIG","BBBSBBBBS":"BIG","SBBSBBSSS":"BIG","BBBSSBSSS":"SMALL","BBSBSSSSB":"SMALL","BBSBBBSBB":"BIG","SBSBBBSSB":"BIG","BSSBBSBSS":"BIG","BSSSBSSSS":"BIG","BBSSBBSSB":"SMALL","SBBBSSSBB":"BIG","BSBSBSBBB":"BIG","BSSBSSBSB":"BIG","BSBSBSBSS":"SMALL","BSBSSSSSB":"BIG","BSSBBSBBS":"BIG","SBBBBSSBB":"SMALL","SSBSSSBSS":"SMALL","SSSSSSBBS":"BIG","SSBBBSSSB":"BIG","BSBBSBSBS":"SMALL","SSBBSSBBB":"BIG","BBSBBBBSS":"SMALL","SBSBSBSSB":"BIG","BBBSSSBSB":"BIG","BBBSBBBSB":"SMALL","BBSSSBSSB":"SMALL","SSSSSBSBB":"SMALL","SSSBSBBSB":"SMALL","BBSBSBBBB":"BIG","BBBBSBSSS":"SMALL","SBSSSSBSB":"BIG","SSBSSBBSS":"SMALL","BBBSSSSSB":"BIG","SSSBBSSSS":"BIG","BBBSBSBBB":"BIG","SBSSBSBSS":"SMALL","BSSSBBSSB":"SMALL","BBSBBSBSS":"SMALL","BBSBBSSSS":"BIG","SSBBSSSSS":"SMALL","SSSSBSSBB":"SMALL","SBBBBSSSB":"BIG","BSBSBBBBS":"SMALL","SSSSSSSBB":"BIG","BBBSSSSBS":"SMALL","BSSBBBBBB":"SMALL","SSBBSSSBS":"SMALL","BBBBSBBBB":"SMALL"};
+
+    function aS3(n){return n.length<3?'BIG':(n[0]+n[1]+n[2])>14?'SMALL':'BIG';}
+    function aCTH(n){return n.length<2?'SMALL':((n[1]+n[0]+3)%10)>=5?'BIG':'SMALL';}
+    function aJG(s){if(s.length<5)return'BIG';let st=1;for(let i=1;i<s.length;i++){if(s[i]===s[0])st++;else break;}return st>=3?(s[0]==='BIG'?'SMALL':'BIG'):s.slice(0,5).filter(x=>x==='BIG').length>=3?'BIG':'SMALL';}
+    function aAD(s){if(s.length<5)return'BIG';const[r1,r2,r3,r4,r5]=s;let p=r1===r2&&r2===r3?r1:r1===r2?r1:r1!==r2&&r2!==r3&&r3!==r4&&r4!==r5?r1:r1==='BIG'?'SMALL':'BIG';const bc=s.slice(0,5).filter(x=>x==='BIG').length;if(bc>=4)p='SMALL';else if(5-bc>=4)p='BIG';return p;}
+    function aPR(s,n){if(s.length<10)return'SMALL';const lb=n.slice(0,10).filter(x=>x>=5).length;const c={BIG:0,SMALL:0};s.slice(0,3).forEach(x=>c[x]++);let p=c.BIG>c.SMALL?'BIG':'SMALL';if(lb>6&&p==='SMALL')p='BIG';if((10-lb)>6&&p==='BIG')p='SMALL';return p;}
+    function aTV(n){if(n.length<10)return'BIG';const m=(n.slice(0,5).reduce((a,b)=>a+b,0)/5)-(n.slice(0,10).reduce((a,b)=>a+b,0)/10);return m>0.5?'BIG':m<-0.5?'SMALL':n[0]>=5?'BIG':'SMALL';}
+    function aNS(n){return n.length<5?'SMALL':(n.slice(0,5).reduce((a,b)=>a+b,0)%10)>=5?'BIG':'SMALL';}
+
+    function proc(data) {
+        if(!data||data.length<10) return null;
+        const nums=data.map(i=>parseInt(i.number));
+        const sizes=nums.map(n=>n>=5?'BIG':'SMALL');
+        const pat=sizes.slice(0,9).reverse().map(s=>s==='BIG'?'B':'S').join('');
+        const dbM=PDB[pat]||null;
+        let models=[
+            {n:"S3",v:aS3(nums)},{n:"CTH",v:aCTH(nums)},{n:"JOE",v:aJG(sizes)},
+            {n:"ADTX",v:aAD(sizes)},{n:"PRO",v:aPR(sizes,nums)},{n:"TVIP",v:aTV(nums)},{n:"MOD",v:aNS(nums)}
+        ];
+        let fp='WAIT';
+        if(dbM){ fp=dbM; }
+        else { let bc=0,sc=0; models.forEach(m=>m.v==='BIG'?bc++:sc++); fp=bc>sc?'BIG':'SMALL'; }
+        return {fp};
+    }
+
+    // ── SERVER TIME SYNC ──
+    let sDiff = 0;
+    async function syncST() {
+        try {
+            const r = await fetch("https://api.bdg88zf.com/api/webapi/GetServerTime");
+            const j = await r.json();
+            sDiff = new Date(j.data.serverTime).getTime() - Date.now();
+        } catch(e) {}
+    }
+
+    const API_URL_30S = 'https://draw.ar-lottery01.com/WinGo/WinGo_30S/GetHistoryIssuePage.json';
+
+    async function startEngine() {
+        await syncST();
+
+        // Timer
+        setInterval(() => {
+            const now = Date.now() + sDiff;
+            const rem = 30 - (Math.floor(now / 1000) % 30);
+            const el = document.getElementById('countdown');
+            el.textContent = (rem < 10 ? '0' + rem : rem) + 's';
+            el.style.color = rem <= 5 ? '#ff003c' : '#a855f7';
+        }, 300);
+
+        // Data fetch
+        setInterval(async () => {
+            try {
+                const response = await fetch(API_URL_30S + '?pageNo=1&pageSize=20&t=' + Date.now());
+                const data = await response.json();
+                const list = data.data.list;
+                const latest = list[0];
+                const p = latest.issueNumber;
+                const num = parseInt(latest.number);
+                const actualSize = num >= 5 ? "BIG" : "SMALL";
+
+                if (lastP !== p) {
+                    if (nextP && lastP && nextP !== "WAIT") {
+                        const isWin = (nextP === actualSize) || targetNums.includes(num);
+                        if (isWin) { wins++; currentLevel = 1; }
+                        else { losses++; currentLevel++; if (currentLevel > 4) currentLevel = 1; }
+                        document.getElementById('win-count').innerText  = wins;
+                        document.getElementById('loss-count').innerText = losses;
+                        document.getElementById('mLevel').innerText = `MARTINGALE: L${currentLevel}`;
+                        sigCount++;
+                        document.getElementById('sig-count').innerText = sigCount;
+                    }
+
+                    lastP = p;
+                    const a = proc(list);
+                    nextP = a ? a.fp : "WAIT";
+
+                    const lastNums = list.slice(0, 5).map(x => parseInt(x.number));
+                    const sum = lastNums.reduce((acc, curr) => acc + curr, 0);
+                    if (nextP === "BIG")        targetNums = sum > 20 ? [0,2] : [1,3];
+                    else if (nextP === "SMALL") targetNums = sum < 25 ? [7,9] : [6,8];
+                    else                        targetNums = ["?","?"];
+
+                    const nextPeriod = (BigInt(p) + 1n).toString();
+                    document.getElementById('period-display').textContent = "P: " + nextPeriod.slice(-4);
+
+                    const lbl = document.getElementById('pred-label');
+                    lbl.textContent = nextP;
+                    lbl.className = nextP === 'SMALL' ? 'pred-value pred-small' : 'pred-value pred-big';
+
+                    document.getElementById('numRow').innerHTML =
+                        `<div class="num-circle">${targetNums[0]}</div><div class="num-circle">${targetNums[1]}</div>`;
+
+                    triggerAnimation();
+                }
+            } catch(e) {}
+        }, 1000);
+    }
+
+    // ── DRAGGABLE ──
+    const boxDrag = document.getElementById('overlay-box');
+    const dragEl  = document.getElementById('overlay-wrapper');
+    let isDragging=false, startX, startY, startL, startT;
+
+    boxDrag.addEventListener('mousedown', startDragging);
+    boxDrag.addEventListener('touchstart', startDragging, { passive: false });
+
+    function startDragging(e) {
+        if (['INPUT','BUTTON','A','I','LABEL','SPAN'].includes(e.target.tagName)) return;
+        if (e.type === 'touchstart') e.preventDefault();
+        isDragging = true;
+        const r = dragEl.getBoundingClientRect();
+        dragEl.style.transform = 'none';
+        dragEl.style.left = r.left + 'px';
+        dragEl.style.top  = r.top  + 'px';
+        startL = r.left; startT = r.top;
+        startX = e.type==='touchstart'?e.touches[0].clientX:e.clientX;
+        startY = e.type==='touchstart'?e.touches[0].clientY:e.clientY;
+        document.addEventListener('mousemove', moveDragging);
+        document.addEventListener('touchmove', moveDragging, { passive: false });
+        document.addEventListener('mouseup',   stopDragging);
+        document.addEventListener('touchend',  stopDragging);
+    }
+    function moveDragging(ev) {
+        if (!isDragging) return;
+        ev.preventDefault();
+        const cx = ev.type==='touchmove'?ev.touches[0].clientX:ev.clientX;
+        const cy = ev.type==='touchmove'?ev.touches[0].clientY:ev.clientY;
+        dragEl.style.left = (startL + cx - startX) + 'px';
+        dragEl.style.top  = (startT + cy - startY) + 'px';
+    }
+    function stopDragging() {
+        isDragging = false;
+        document.removeEventListener('mousemove', moveDragging);
+        document.removeEventListener('touchmove', moveDragging);
+    }
+</script>
+</body>
+</html>
