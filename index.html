@@ -1,134 +1,1778 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Terminated</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0a00">
+<title>আকাশ হারমোনিয়াম</title>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Cinzel+Decorative:wght@700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wood-dark: #2c1a08;
+    --wood-mid: #4a2c0f;
+    --wood-light: #7a4a1e;
+    --wood-shine: #a0622a;
+    --gold: #c9952a;
+    --gold-light: #f0c060;
+    --gold-bright: #ffe080;
+    --ivory: #f5f0e0;
+    --ivory-dark: #e8dfc0;
+    --black-key: #1a1008;
+    --key-glow: #ffaa00;
+    --drone-color: #e05020;
+    --bg-dark: #0d0600;
+    --panel-bg: #1e0e04;
+    --text-gold: #d4a030;
+    --text-light: #f0e0b0;
+    --green: #40c060;
+    --red: #e03030;
+    --blue: #3080e0;
+  }
 
-        body {
-            background: #05050a;
-            color: #f8fafc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-        .container {
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            padding: 40px 20px;
-        }
+  body {
+    background: radial-gradient(ellipse at top, #1a0800 0%, #0d0400 60%, #000 100%);
+    min-height: 100vh;
+    font-family: 'Lato', sans-serif;
+    color: var(--text-light);
+    overflow-x: hidden;
+    user-select: none;
+  }
 
-        /* গ্লিচ বা ডেঞ্জার লুকের জন্য বড় ক্রস আইকন */
-        .error-graphic {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 30px;
-            background: rgba(239, 68, 68, 0.05);
-            border: 2px solid #ef4444;
-            border-radius: 24px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);
-        }
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(180deg, #2c1505 0%, #1a0a02 100%);
+    border-bottom: 3px solid var(--gold);
+    padding: 10px 15px 8px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(200,140,0,0.3);
+  }
+  .header::before {
+    content: '♫';
+    position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+    font-size: 22px; color: var(--gold); opacity: 0.7;
+  }
+  .header::after {
+    content: '♫';
+    position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+    font-size: 22px; color: var(--gold); opacity: 0.7;
+  }
+  .brand-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 22px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    letter-spacing: 3px;
+  }
+  .brand-sub {
+    font-family: 'Tiro Bangla', serif;
+    font-size: 11px;
+    color: var(--gold);
+    opacity: 0.8;
+    letter-spacing: 2px;
+    margin-top: 2px;
+  }
 
-        .error-graphic svg {
-            width: 50px;
-            height: 50px;
-            fill: #ef4444;
-        }
+  /* ===== STATUS BAR ===== */
+  .status-bar {
+    background: #100500;
+    border-bottom: 1px solid #3a1a00;
+    padding: 5px 10px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 11px;
+  }
+  .status-pill {
+    background: #1e0e02;
+    border: 1px solid #4a2a00;
+    border-radius: 20px;
+    padding: 2px 8px;
+    color: var(--gold);
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .status-pill.active { background: #3a1a00; border-color: var(--gold); color: var(--gold-bright); }
+  .status-pill.rec { background: #3a0000; border-color: var(--red); color: #ff6060; animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-        h1 {
-            font-size: 32px;
-            font-weight: 800;
-            color: #ffffff;
-            margin-bottom: 15px;
-            letter-spacing: -1px;
-            text-transform: uppercase;
-        }
+  /* ===== BELLOWS ANIMATION ===== */
+  .bellows-wrap {
+    background: linear-gradient(180deg, #1a0800 0%, #0d0400 100%);
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid #3a1a00;
+    gap: 8px;
+  }
+  .bellows {
+    flex: 1;
+    height: 30px;
+    background: repeating-linear-gradient(90deg, #2a1200 0px, #4a2200 4px, #1a0a00 8px);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s;
+  }
+  .bellows.active { animation: bellows-pump 0.3s ease-in-out; }
+  @keyframes bellows-pump {
+    0%{transform:scaleX(1)} 30%{transform:scaleX(0.85)} 100%{transform:scaleX(1)}
+  }
+  .bellows-label {
+    font-size: 9px;
+    color: var(--gold);
+    opacity: 0.7;
+    text-align: center;
+    white-space: nowrap;
+  }
 
-        .status-badge {
-            display: inline-block;
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
-            padding: 6px 16px;
-            border-radius: 50px;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 25px;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
+  /* ===== SETTINGS PANEL TOGGLE ===== */
+  .settings-toggle {
+    background: linear-gradient(135deg, #3a1a00, #2a1000);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 6px 14px;
+    margin: 8px 10px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    color: var(--gold);
+    font-size: 12px;
+    font-family: 'Tiro Bangla', serif;
+  }
+  .settings-toggle .arrow { transition: transform 0.3s; font-size: 10px; }
+  .settings-toggle.open .arrow { transform: rotate(180deg); }
 
-        p {
-            color: #94a3b8;
-            font-size: 16px;
-            line-height: 1.7;
-            margin-bottom: 35px;
-        }
+  /* ===== SETTINGS PANEL ===== */
+  .settings-panel {
+    background: linear-gradient(180deg, #180800 0%, #100500 100%);
+    border-bottom: 2px solid #3a1a00;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease;
+    padding: 0 10px;
+  }
+  .settings-panel.open { max-height: 900px; padding: 8px 10px 12px; }
 
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #334155, transparent);
-            margin-bottom: 35px;
-        }
+  .settings-section {
+    margin-bottom: 10px;
+  }
+  .settings-title {
+    font-family: 'Tiro Bangla', serif;
+    font-size: 11px;
+    color: var(--gold);
+    border-bottom: 1px solid #3a1a00;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
 
-        .btn-exit {
-            display: inline-block;
-            background: #1e293b;
-            color: #94a3b8;
-            text-decoration: none;
-            padding: 14px 35px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 15px;
-            border: 1px solid #334155;
-            transition: all 0.2s ease;
-        }
+  .settings-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .settings-label {
+    font-size: 10px;
+    color: var(--text-light);
+    opacity: 0.8;
+    min-width: 70px;
+    font-family: 'Tiro Bangla', serif;
+  }
 
-        .btn-exit:hover {
-            background: #ef4444;
-            color: #ffffff;
-            border-color: #ef4444;
-            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.25);
-            transform: translateY(-2px);
-        }
-    </style>
+  /* Sliders */
+  input[type=range] {
+    -webkit-appearance: none;
+    flex: 1;
+    height: 4px;
+    background: #3a1a00;
+    border-radius: 2px;
+    outline: none;
+    min-width: 80px;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--gold-bright);
+    cursor: pointer;
+  }
+  .range-val {
+    font-size: 10px;
+    color: var(--gold);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  /* Buttons */
+  .btn {
+    background: linear-gradient(135deg, #3a1a00, #2a1000);
+    border: 1px solid var(--gold);
+    border-radius: 6px;
+    padding: 5px 10px;
+    color: var(--gold);
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Tiro Bangla', serif;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn:active, .btn.active {
+    background: linear-gradient(135deg, #6a3000, #4a1800);
+    border-color: var(--gold-bright);
+    color: var(--gold-bright);
+    transform: scale(0.96);
+  }
+  .btn.green { border-color: var(--green); color: var(--green); }
+  .btn.green.active { background: #003a10; border-color: #80ff80; color: #80ff80; }
+  .btn.red-btn { border-color: var(--red); color: var(--red); }
+  .btn.red-btn.active { background: #3a0000; border-color: #ff8080; color: #ff8080; }
+  .btn.blue { border-color: var(--blue); color: var(--blue); }
+  .btn.blue.active { background: #00103a; border-color: #80c0ff; color: #80c0ff; }
+
+  /* Scale buttons */
+  .scale-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+  .scale-btn {
+    background: #1e0e02;
+    border: 1px solid #4a2a00;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: var(--text-light);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .scale-btn.active {
+    background: #4a2000;
+    border-color: var(--gold);
+    color: var(--gold-bright);
+  }
+
+  /* Octave selector */
+  .octave-btns { display: flex; gap: 4px; }
+  .octave-btn {
+    background: #1e0e02;
+    border: 1px solid #4a2a00;
+    border-radius: 4px;
+    padding: 4px 10px;
+    color: var(--text-light);
+    font-size: 11px;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .octave-btn.active { background: #4a2000; border-color: var(--gold); color: var(--gold-bright); }
+
+  /* Theme swatches */
+  .theme-swatches { display: flex; gap: 6px; }
+  .swatch {
+    width: 28px; height: 28px;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .swatch.active { border-color: var(--gold-bright); transform: scale(1.1); }
+  .swatch-1 { background: linear-gradient(135deg, #7a4a1e, #4a2c0f); }
+  .swatch-2 { background: linear-gradient(135deg, #1a3a1a, #0a2a0a); }
+  .swatch-3 { background: linear-gradient(135deg, #1a1a3a, #0a0a2a); }
+  .swatch-4 { background: linear-gradient(135deg, #3a1a1a, #2a0a0a); }
+  .swatch-5 { background: linear-gradient(135deg, #2a2a2a, #1a1a1a); }
+
+  /* ===== DRONE SECTION ===== */
+  .drone-section {
+    background: #120600;
+    border: 1px solid #3a1a00;
+    border-radius: 6px;
+    padding: 6px 10px;
+  }
+  .drone-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .drone-indicator {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #3a0000;
+    border: 1px solid #600000;
+    transition: all 0.3s;
+  }
+  .drone-indicator.active { background: var(--drone-color); border-color: #ff8060; box-shadow: 0 0 6px var(--drone-color); }
+
+  /* ===== RECORDING ===== */
+  .rec-time {
+    font-size: 11px;
+    color: #ff6060;
+    font-family: monospace;
+    min-width: 40px;
+  }
+
+  /* ===== METRONOME ===== */
+  .metro-beat {
+    display: flex; gap: 4px; align-items: center;
+  }
+  .beat-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #3a1a00;
+    border: 1px solid #5a2a00;
+    transition: all 0.1s;
+  }
+  .beat-dot.active { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+
+  /* ===== SONG TABS ===== */
+  .song-tabs-list {
+    display: flex; gap: 4px; flex-wrap: wrap;
+  }
+  .song-tab-btn {
+    background: #1a0a00;
+    border: 1px solid #3a1a00;
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: var(--text-light);
+    font-size: 10px;
+    cursor: pointer;
+    font-family: 'Tiro Bangla', serif;
+    transition: all 0.15s;
+  }
+  .song-tab-btn.active { background: #3a1a00; border-color: var(--gold); color: var(--gold); }
+
+  .notation-display {
+    background: #0a0400;
+    border: 1px solid #2a1000;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-family: 'Tiro Bangla', serif;
+    font-size: 12px;
+    color: var(--gold-bright);
+    margin-top: 4px;
+    line-height: 1.8;
+    letter-spacing: 2px;
+    display: none;
+  }
+  .notation-display.show { display: block; }
+
+  /* ===== PRACTICE MODE ===== */
+  .practice-box {
+    background: #0a0400;
+    border: 1px solid #2a1000;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+    display: none;
+  }
+  .practice-box.show { display: block; }
+  .practice-question { font-family: 'Tiro Bangla', serif; font-size: 14px; color: var(--gold-bright); margin-bottom: 6px; }
+  .practice-score { font-size: 12px; color: var(--green); margin-top: 4px; }
+  .practice-hint { font-size: 10px; color: var(--text-light); opacity: 0.6; }
+
+  /* ===== KEYBOARD AREA ===== */
+  .keyboard-wrap {
+    background: linear-gradient(180deg, #2c1200 0%, #1a0800 100%);
+    border-top: 3px solid var(--gold);
+    border-bottom: 3px solid var(--gold);
+    padding: 10px 8px 14px;
+    position: relative;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .keyboard-scroll {
+    display: flex;
+    gap: 0;
+    min-width: max-content;
+    margin: 0 auto;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* White Keys */
+  .key-white {
+    width: 44px;
+    height: 130px;
+    background: linear-gradient(180deg, var(--ivory) 0%, var(--ivory-dark) 80%, #d0c8a0 100%);
+    border: 1px solid #8a7a50;
+    border-bottom: 3px solid #6a5a30;
+    border-radius: 0 0 6px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: background 0.08s, transform 0.08s, box-shadow 0.08s;
+    box-shadow: 2px 3px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.8);
+    z-index: 1;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+  }
+  .key-white:active, .key-white.pressed {
+    background: linear-gradient(180deg, #ffd080 0%, #ffb840 80%, #e0a020 100%);
+    transform: translateY(3px);
+    box-shadow: 1px 1px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .key-white.glow-key.pressed {
+    background: linear-gradient(180deg, #ffe090 0%, #ffcc50 80%, #f0b030 100%);
+    box-shadow: 0 0 12px var(--key-glow), 0 0 4px var(--key-glow), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+
+  /* Black Keys */
+  .key-black {
+    width: 28px;
+    height: 80px;
+    background: linear-gradient(180deg, #2a1800 0%, var(--black-key) 60%, #0a0600 100%);
+    border: 1px solid #5a3a10;
+    border-bottom: 3px solid #000;
+    border-radius: 0 0 4px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 4px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    z-index: 2;
+    transition: background 0.08s, transform 0.08s;
+    box-shadow: 1px 3px 6px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
+  }
+  .key-black:active, .key-black.pressed {
+    background: linear-gradient(180deg, #5a3000 0%, #3a1800 60%, #1a0800 100%);
+    transform: translateY(2px);
+    box-shadow: 0 0 8px rgba(200,120,0,0.4);
+  }
+  .key-black.glow-key.pressed {
+    box-shadow: 0 0 10px var(--key-glow), 0 0 4px var(--key-glow);
+  }
+
+  /* Key Labels */
+  .key-label-bn {
+    font-family: 'Tiro Bangla', serif;
+    font-size: 10px;
+    color: #5a3a10;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .key-label-en {
+    font-size: 8px;
+    color: #8a6a30;
+    line-height: 1;
+    margin-top: 1px;
+  }
+  .key-black .key-label-bn { color: #c09050; font-size: 8px; }
+  .key-black .key-label-en { color: #806030; font-size: 7px; }
+
+  /* Key highlight ring */
+  .key-white::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0 0 6px 6px;
+    opacity: 0;
+    background: radial-gradient(ellipse at center 60%, rgba(255,200,50,0.4) 0%, transparent 70%);
+    transition: opacity 0.1s;
+    pointer-events: none;
+  }
+  .key-white.pressed::after { opacity: 1; }
+
+  /* ===== BOTTOM CONTROLS ===== */
+  .bottom-controls {
+    background: linear-gradient(180deg, #1a0800 0%, #120500 100%);
+    border-top: 2px solid #3a1a00;
+    padding: 8px 10px;
+  }
+
+  .quick-btns {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .quick-btn {
+    background: linear-gradient(135deg, #2a1200, #1a0800);
+    border: 1px solid #5a2a00;
+    border-radius: 8px;
+    padding: 6px 12px;
+    color: var(--gold);
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Tiro Bangla', serif;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .quick-btn:active, .quick-btn.active {
+    background: linear-gradient(135deg, #5a2a00, #3a1200);
+    border-color: var(--gold);
+    color: var(--gold-bright);
+    transform: scale(0.96);
+  }
+  .quick-btn .icon { font-size: 14px; }
+
+  /* ===== CHORD MODE ===== */
+  .chord-display {
+    background: #0a0400;
+    border: 1px solid #2a1000;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: var(--gold);
+    text-align: center;
+    font-family: 'Tiro Bangla', serif;
+  }
+
+  /* ===== PARTICLES ===== */
+  .particle-container {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: float-up 1.2s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes float-up {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-80px) scale(0.2); }
+  }
+
+  /* ===== GLOW PULSE ON BODY ===== */
+  .body-glow { animation: body-pulse 0.2s ease-out; }
+  @keyframes body-pulse {
+    0%{box-shadow:inset 0 0 0 rgba(255,150,0,0)} 50%{box-shadow:inset 0 0 30px rgba(255,150,0,0.08)} 100%{box-shadow:inset 0 0 0 rgba(255,150,0,0)}
+  }
+
+  /* EQ visual */
+  .eq-bars { display: flex; gap: 2px; align-items: flex-end; height: 20px; }
+  .eq-bar {
+    width: 4px;
+    background: var(--gold);
+    border-radius: 2px 2px 0 0;
+    transition: height 0.1s;
+    min-height: 2px;
+  }
+
+  /* Favorite Chords */
+  .fav-chords { display: flex; gap: 4px; flex-wrap: wrap; }
+  .fav-chord-btn {
+    background: #1a0a00;
+    border: 1px solid #3a1a00;
+    border-radius: 4px;
+    padding: 3px 7px;
+    color: var(--text-light);
+    font-size: 10px;
+    cursor: pointer;
+    font-family: 'Tiro Bangla', serif;
+  }
+  .fav-chord-btn:active { background: #3a1a00; color: var(--gold); }
+
+  /* Scrollbar style */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: #0d0400; }
+  ::-webkit-scrollbar-thumb { background: #4a2a00; border-radius: 2px; }
+
+  /* Scale info */
+  .raga-display {
+    font-family: 'Tiro Bangla', serif;
+    font-size: 10px;
+    color: var(--gold);
+    text-align: center;
+    padding: 2px;
+    opacity: 0.8;
+  }
+</style>
 </head>
 <body>
 
-    <div class="container">
-        <!-- টোটাল ব্যানের ক্রস আইকন -->
-        <div class="error-graphic">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            </svg>
-        </div>
+<!-- Particle Layer -->
+<div class="particle-container" id="particles"></div>
 
-        <!-- মেইন মেসেজ -->
-        <h1>Account Deleted</h1>
-        <div class="status-badge">Totally Banned</div>
-        
-        <p>আপনার এই অ্যাকাউন্টটি সিস্টেম থেকে সম্পূর্ণভাবে বাতিল ও ব্যান করা হয়েছে। এই আইডির সমস্ত ডাটাবেজ ডিলিট করে দেওয়া হয়েছে, যার ফলে এটি আর কোনোভাবেই রিকভার বা লগইন করা সম্ভব নয়।</p>
+<!-- HEADER -->
+<div class="header">
+  <div class="brand-name">আকাশ</div>
+  <div class="brand-sub">HARMONIUM • হারমোনিয়াম</div>
+</div>
 
-        <div class="divider"></div>
+<!-- STATUS BAR -->
+<div class="status-bar" id="statusBar">
+  <span class="status-pill active" id="scaleStatus">স্কেল: C</span>
+  <span class="status-pill active" id="octaveStatus">অক্টেভ: মধ্যম</span>
+  <span class="status-pill" id="droneStatus">ড্রোন: বন্ধ</span>
+  <span class="status-pill" id="reverbStatus">Reverb: বন্ধ</span>
+  <span class="status-pill" id="metroStatus">তাল: বন্ধ</span>
+  <span class="status-pill" id="recStatusPill" style="display:none">⏺ রেকর্ড</span>
+</div>
 
-        <!-- হোম বা এক্সিট বাটন -->
-        <a href="#homepage-link" class="btn-exit">Back to Homepage</a>
+<!-- BELLOWS -->
+<div class="bellows-wrap">
+  <span class="bellows-label">হাপর</span>
+  <div class="bellows" id="bellows"></div>
+  <span class="bellows-label">হাপর</span>
+</div>
+
+<!-- SETTINGS TOGGLE -->
+<div class="settings-toggle" id="settingsToggle" onclick="toggleSettings()">
+  <span>⚙️ সেটিংস ও ফিচার সমূহ</span>
+  <span class="arrow" id="settingsArrow">▼</span>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div class="settings-panel" id="settingsPanel">
+
+  <!-- SOUND SETTINGS -->
+  <div class="settings-section">
+    <div class="settings-title">🔊 সাউন্ড সেটিংস</div>
+
+    <div class="settings-row">
+      <span class="settings-label">ভলিউম</span>
+      <input type="range" min="0" max="100" value="80" id="volumeSlider" oninput="updateVolume(this.value)">
+      <span class="range-val" id="volumeVal">80</span>
     </div>
 
+    <div class="settings-row">
+      <span class="settings-label">সাসটেইন</span>
+      <input type="range" min="0" max="100" value="60" id="sustainSlider" oninput="updateSustain(this.value)">
+      <span class="range-val" id="sustainVal">60</span>
+    </div>
+
+    <div class="settings-row">
+      <span class="settings-label">হাওয়া জোর</span>
+      <input type="range" min="1" max="10" value="5" id="bellowsSlider" oninput="updateBellows(this.value)">
+      <span class="range-val" id="bellowsVal">5</span>
+    </div>
+
+    <div class="settings-row">
+      <span class="settings-label">Reverb</span>
+      <input type="range" min="0" max="100" value="0" id="reverbSlider" oninput="updateReverb(this.value)">
+      <span class="range-val" id="reverbVal">0</span>
+    </div>
+
+    <div class="settings-row">
+      <span class="settings-label">Echo</span>
+      <input type="range" min="0" max="100" value="0" id="echoSlider" oninput="updateEcho(this.value)">
+      <span class="range-val" id="echoVal">0</span>
+    </div>
+
+    <div class="settings-row">
+      <span class="settings-label">Bass</span>
+      <input type="range" min="-10" max="10" value="0" id="bassSlider" oninput="updateEQ('bass',this.value)">
+      <span class="range-val" id="bassVal">0</span>
+    </div>
+
+    <div class="settings-row">
+      <span class="settings-label">Treble</span>
+      <input type="range" min="-10" max="10" value="0" id="trebleSlider" oninput="updateEQ('treble',this.value)">
+      <span class="range-val" id="trebleVal">0</span>
+    </div>
+
+    <div class="settings-row">
+      <span class="settings-label">Transpose</span>
+      <input type="range" min="-6" max="6" value="0" id="transposeSlider" oninput="updateTranspose(this.value)">
+      <span class="range-val" id="transposeVal">0</span>
+    </div>
+  </div>
+
+  <!-- SCALE / PITCH -->
+  <div class="settings-section">
+    <div class="settings-title">🎵 পিচ / স্কেল</div>
+    <div class="scale-btns" id="scaleBtns">
+      <button class="scale-btn active" onclick="setScale('C',this)">C</button>
+      <button class="scale-btn" onclick="setScale('C#',this)">C#</button>
+      <button class="scale-btn" onclick="setScale('D',this)">D</button>
+      <button class="scale-btn" onclick="setScale('D#',this)">D#</button>
+      <button class="scale-btn" onclick="setScale('E',this)">E</button>
+      <button class="scale-btn" onclick="setScale('F',this)">F</button>
+      <button class="scale-btn" onclick="setScale('F#',this)">F#</button>
+      <button class="scale-btn" onclick="setScale('G',this)">G</button>
+      <button class="scale-btn" onclick="setScale('G#',this)">G#</button>
+      <button class="scale-btn" onclick="setScale('A',this)">A</button>
+      <button class="scale-btn" onclick="setScale('A#',this)">A#</button>
+      <button class="scale-btn" onclick="setScale('B',this)">B</button>
+    </div>
+    <div class="raga-display" id="ragaDisplay">রাগ: ভৈরবী (সকাল)</div>
+  </div>
+
+  <!-- OCTAVE -->
+  <div class="settings-section">
+    <div class="settings-title">🎼 অক্টেভ</div>
+    <div class="octave-btns">
+      <button class="octave-btn" onclick="setOctave(3,this)">নিচু</button>
+      <button class="octave-btn active" onclick="setOctave(4,this)">মধ্যম</button>
+      <button class="octave-btn" onclick="setOctave(5,this)">উঁচু</button>
+    </div>
+  </div>
+
+  <!-- DRONE -->
+  <div class="settings-section">
+    <div class="settings-title">🌊 ড্রোন / তানপুরা</div>
+    <div class="drone-section">
+      <div class="drone-row">
+        <div class="drone-indicator" id="droneIndicator"></div>
+        <button class="btn green" id="droneBtn" onclick="toggleDrone()">ড্রোন চালু</button>
+        <button class="btn" id="droneSaPaBtn" onclick="setDroneType('sapa')" style="font-family:'Tiro Bangla',serif">সা-পা</button>
+        <button class="btn" id="droneSaBtn" onclick="setDroneType('sa')" style="font-family:'Tiro Bangla',serif">শুধু সা</button>
+      </div>
+      <div class="settings-row" style="margin-top:6px">
+        <span class="settings-label">ড্রোন ভলিউম</span>
+        <input type="range" min="0" max="100" value="40" id="droneVolSlider" oninput="updateDroneVol(this.value)">
+        <span class="range-val" id="droneVolVal">40</span>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label">ড্রোন স্পিড</span>
+        <input type="range" min="1" max="10" value="5" id="droneSpeedSlider" oninput="updateDroneSpeed(this.value)">
+        <span class="range-val" id="droneSpeedVal">5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRONOME -->
+  <div class="settings-section">
+    <div class="settings-title">⏱️ মেট্রোনম / তাল</div>
+    <div class="settings-row">
+      <button class="btn green" id="metroBtn" onclick="toggleMetro()">তাল চালু</button>
+      <span class="settings-label" style="margin-left:4px">BPM:</span>
+      <input type="range" min="40" max="200" value="80" id="bpmSlider" oninput="updateBPM(this.value)">
+      <span class="range-val" id="bpmVal">80</span>
+    </div>
+    <div class="metro-beat" id="metroBeat">
+      <div class="beat-dot" id="beat0"></div>
+      <div class="beat-dot" id="beat1"></div>
+      <div class="beat-dot" id="beat2"></div>
+      <div class="beat-dot" id="beat3"></div>
+    </div>
+  </div>
+
+  <!-- RECORDING -->
+  <div class="settings-section">
+    <div class="settings-title">🔴 রেকর্ডিং</div>
+    <div class="settings-row">
+      <button class="btn red-btn" id="recBtn" onclick="toggleRecord()">⏺ রেকর্ড</button>
+      <button class="btn blue" id="playBtn" onclick="playRecording()" disabled>▶ প্লেব্যাক</button>
+      <button class="btn" id="loopBtn" onclick="toggleLoop()">🔁 লুপ</button>
+      <span class="rec-time" id="recTime">0:00</span>
+    </div>
+    <div class="settings-row">
+      <button class="btn" onclick="saveRecording()" style="font-family:'Tiro Bangla',serif">💾 সেভ</button>
+      <button class="btn" onclick="clearRecording()" style="font-family:'Tiro Bangla',serif">🗑️ মুছুন</button>
+    </div>
+  </div>
+
+  <!-- SONG TABS -->
+  <div class="settings-section">
+    <div class="settings-title">📖 গানের নোটেশন</div>
+    <div class="song-tabs-list">
+      <button class="song-tab-btn" onclick="showSong('amar_sonar')">আমার সোনার বাংলা</button>
+      <button class="song-tab-btn" onclick="showSong('ekla_cholo')">একলা চলো রে</button>
+      <button class="song-tab-btn" onclick="showSong('amar_bhaier')">আমার ভাইয়ের রক্তে</button>
+      <button class="song-tab-btn" onclick="showSong('রবীন্দ্র')">আনন্দলোকে</button>
+    </div>
+    <div class="notation-display" id="notationDisplay"></div>
+  </div>
+
+  <!-- PRACTICE MODE -->
+  <div class="settings-section">
+    <div class="settings-title">🎯 প্র্যাকটিস মোড</div>
+    <div class="settings-row">
+      <button class="btn green" id="practiceBtn" onclick="togglePractice()">প্র্যাকটিস শুরু</button>
+      <span class="settings-label" id="practiceScoreLabel">স্কোর: 0</span>
+    </div>
+    <div class="practice-box" id="practiceBox">
+      <div class="practice-question" id="practiceQ">এই সুরটি কোনটি?</div>
+      <div class="practice-hint" id="practiceHint">চাবি বাজিয়ে উত্তর দাও</div>
+      <div class="practice-score" id="practiceScoreDisplay">✅ সঠিক: 0 | ❌ ভুল: 0</div>
+    </div>
+  </div>
+
+  <!-- THEME & APPEARANCE -->
+  <div class="settings-section">
+    <div class="settings-title">🎨 থিম ও চেহারা</div>
+    <div class="settings-row">
+      <span class="settings-label">কাঠের রঙ</span>
+      <div class="theme-swatches">
+        <div class="swatch swatch-1 active" onclick="setTheme(1,this)" title="বাদামি"></div>
+        <div class="swatch swatch-2" onclick="setTheme(2,this)" title="সবুজ"></div>
+        <div class="swatch swatch-3" onclick="setTheme(3,this)" title="নীল"></div>
+        <div class="swatch swatch-4" onclick="setTheme(4,this)" title="লাল"></div>
+        <div class="swatch swatch-5" onclick="setTheme(5,this)" title="কালো"></div>
+      </div>
+    </div>
+    <div class="settings-row">
+      <button class="btn" id="glowBtn" onclick="toggleGlow()">✨ Glow Effect</button>
+      <button class="btn" id="particleBtn" onclick="toggleParticles()">🌟 Particles</button>
+      <button class="btn" id="vibBtn" onclick="toggleVibration()">📳 Vibration</button>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label">চাবির সাইজ</span>
+      <button class="btn" onclick="setKeySize('small')">ছোট</button>
+      <button class="btn active" onclick="setKeySize('medium')">মাঝারি</button>
+      <button class="btn" onclick="setKeySize('large')">বড়</button>
+    </div>
+  </div>
+
+  <!-- CHORD MODE -->
+  <div class="settings-section">
+    <div class="settings-title">🎸 কর্ড মোড ও প্রিয় কর্ড</div>
+    <div class="settings-row">
+      <button class="btn" id="chordModeBtn" onclick="toggleChordMode()">কর্ড মোড</button>
+      <button class="btn" onclick="saveFavoriteChord()">💛 সেভ কর্ড</button>
+    </div>
+    <div class="chord-display" id="chordDisplay">কোনো চাবি বাজাও নি</div>
+    <div class="fav-chords" id="favChords" style="margin-top:6px"></div>
+  </div>
+
+  <!-- AUTO TUNE / SCALE FINDER -->
+  <div class="settings-section">
+    <div class="settings-title">🔍 স্কেল ফাইন্ডার ও অটো-টিউন</div>
+    <div class="settings-row">
+      <button class="btn" id="autoTuneBtn" onclick="toggleAutoTune()">অটো-টিউন</button>
+      <button class="btn" onclick="findScale()">স্কেল খুঁজো</button>
+      <span class="range-val" id="scaleFound" style="color:var(--gold);font-size:10px"></span>
+    </div>
+  </div>
+
+</div>
+<!-- END SETTINGS PANEL -->
+
+<!-- EQ VISUALIZER -->
+<div style="display:flex;justify-content:center;padding:4px;background:#0d0400">
+  <div class="eq-bars" id="eqBars">
+    <div class="eq-bar" style="height:4px"></div>
+    <div class="eq-bar" style="height:8px"></div>
+    <div class="eq-bar" style="height:6px"></div>
+    <div class="eq-bar" style="height:12px"></div>
+    <div class="eq-bar" style="height:8px"></div>
+    <div class="eq-bar" style="height:5px"></div>
+    <div class="eq-bar" style="height:10px"></div>
+    <div class="eq-bar" style="height:7px"></div>
+  </div>
+</div>
+
+<!-- KEYBOARD -->
+<div class="keyboard-wrap" id="keyboardWrap">
+  <div class="keyboard-scroll" id="keyboardScroll"></div>
+</div>
+
+<!-- KEY MAPPING DISPLAY -->
+<div style="background:#0d0400;border-top:1px solid #2a1000;padding:4px 10px;text-align:center;">
+  <span style="font-size:9px;color:#5a3a10;font-family:'Tiro Bangla',serif" id="keyMapHint">👆 চাবিতে স্পর্শ করে সুর বাজাও</span>
+</div>
+
+<!-- BOTTOM QUICK CONTROLS -->
+<div class="bottom-controls">
+  <div class="quick-btns">
+    <button class="quick-btn" id="qDrone" onclick="toggleDrone()">
+      <span class="icon">🌊</span> ড্রোন
+    </button>
+    <button class="quick-btn" id="qRecord" onclick="toggleRecord()">
+      <span class="icon">⏺</span> রেকর্ড
+    </button>
+    <button class="quick-btn" id="qMetro" onclick="toggleMetro()">
+      <span class="icon">⏱️</span> তাল
+    </button>
+    <button class="quick-btn" id="qPractice" onclick="togglePractice()">
+      <span class="icon">🎯</span> প্র্যাকটিস
+    </button>
+    <button class="quick-btn" id="qChord" onclick="toggleChordMode()">
+      <span class="icon">🎸</span> কর্ড
+    </button>
+    <button class="quick-btn" onclick="resetAll()">
+      <span class="icon">🔄</span> রিসেট
+    </button>
+  </div>
+
+  <div style="text-align:center;font-size:9px;color:#3a2010;font-family:'Tiro Bangla',serif;margin-top:2px">
+    আকাশ হারমোনিয়াম • সকল সুর আপনার হৃদয়ে
+  </div>
+</div>
+
+<script>
+// ============================================================
+// AUDIO ENGINE
+// ============================================================
+let audioCtx = null;
+const activeNodes = {};
+let volume = 0.8;
+let sustain = 0.6;
+let reverbWet = 0;
+let echoWet = 0;
+let bassGain = 0;
+let trebleGain = 0;
+let transposeVal = 0;
+let bellowsSpeed = 5;
+let currentOctave = 4;
+let currentScale = 'C';
+let glowEnabled = false;
+let particlesEnabled = true;
+let vibrationEnabled = true;
+let droneActive = false;
+let droneType = 'sapa';
+let droneVol = 0.4;
+let droneSpeed = 5;
+let metroActive = false;
+let bpm = 80;
+let metroInterval = null;
+let currentBeat = 0;
+let isRecording = false;
+let recordedNotes = [];
+let recordStartTime = 0;
+let recTimerInterval = null;
+let recDuration = 0;
+let loopMode = false;
+let playbackTimeout = null;
+let practiceActive = false;
+let practiceScore = 0;
+let practiceMiss = 0;
+let practiceTarget = null;
+let chordMode = false;
+let pressedKeys = new Set();
+let favChords = [];
+let autoTune = false;
+let keySize = 'medium';
+let droneOscillators = [];
+let convolver = null;
+let delayNode = null;
+let bassFilter = null;
+let trebleFilter = null;
+let masterGainNode = null;
+let currentTheme = 1;
+
+// Scale root frequencies
+const scaleRoots = {
+  'C':261.63,'C#':277.18,'D':293.66,'D#':311.13,
+  'E':329.63,'F':349.23,'F#':369.99,'G':392.00,
+  'G#':415.30,'A':440.00,'A#':466.16,'B':493.88
+};
+
+// Notes in octave (semitone offsets from root)
+const noteOffsets = [0,2,4,5,7,9,11,12]; // Sa Re Ga Ma Pa Dha Ni Sa2
+const noteNamesBn = ['সা','রে','গা','মা','পা','ধা','নি','সা'];
+const noteNamesEn = ['Sa','Re','Ga','Ma','Pa','Dha','Ni','Sa'];
+const noteNamesSkt = ['ষড্জ','ঋষভ','গান্ধার','মধ্যম','পঞ্চম','ধৈবত','নিষাদ','ষড্জ'];
+
+// Full chromatic keyboard layout
+// white keys: C D E F G A B | black keys: C# D# F# G# A#
+const whiteKeys = [
+  {note:'C', bn:'সা', en:'Sa', semi:0},
+  {note:'D', bn:'রে', en:'Re', semi:2},
+  {note:'E', bn:'গা', en:'Ga', semi:4},
+  {note:'F', bn:'মা', en:'Ma', semi:5},
+  {note:'G', bn:'পা', en:'Pa', semi:7},
+  {note:'A', bn:'ধা', en:'Dha', semi:9},
+  {note:'B', bn:'নি', en:'Ni', semi:11},
+  // Octave 2
+  {note:'C2', bn:'সা', en:'Sa', semi:12},
+  {note:'D2', bn:'রে', en:'Re', semi:14},
+  {note:'E2', bn:'গা', en:'Ga', semi:16},
+  {note:'F2', bn:'মা', en:'Ma', semi:17},
+  {note:'G2', bn:'পা', en:'Pa', semi:19},
+  {note:'A2', bn:'ধা', en:'Dha', semi:21},
+  {note:'B2', bn:'নি', en:'Ni', semi:23},
+  // High Sa
+  {note:'C3', bn:'সা', en:'Sa', semi:24},
+];
+
+const blackKeys = [
+  {note:'Cs', bn:'ক', en:'K', semi:1, pos:0},
+  {note:'Ds', bn:'খ', en:'Kh', semi:3, pos:1},
+  {note:'Fs', bn:'গ♭', en:'G♭', semi:6, pos:3},
+  {note:'Gs', bn:'ধ♭', en:'D♭', semi:8, pos:4},
+  {note:'As', bn:'ন♭', en:'N♭', semi:10, pos:5},
+  // 2nd octave
+  {note:'Cs2', bn:'ক', en:'K', semi:13, pos:7},
+  {note:'Ds2', bn:'খ', en:'Kh', semi:15, pos:8},
+  {note:'Fs2', bn:'গ♭', en:'G♭', semi:18, pos:10},
+  {note:'Gs2', bn:'ধ♭', en:'D♭', semi:20, pos:11},
+  {note:'As2', bn:'ন♭', en:'N♭', semi:22, pos:12},
+];
+
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  
+  masterGainNode = audioCtx.createGain();
+  masterGainNode.gain.value = volume;
+
+  bassFilter = audioCtx.createBiquadFilter();
+  bassFilter.type = 'lowshelf';
+  bassFilter.frequency.value = 200;
+  bassFilter.gain.value = 0;
+
+  trebleFilter = audioCtx.createBiquadFilter();
+  trebleFilter.type = 'highshelf';
+  trebleFilter.frequency.value = 3000;
+  trebleFilter.gain.value = 0;
+
+  delayNode = audioCtx.createDelay(2);
+  delayNode.delayTime.value = 0.35;
+  const delayFeedback = audioCtx.createGain();
+  delayFeedback.gain.value = 0;
+  const delayGain = audioCtx.createGain();
+  delayGain.gain.value = 0;
+  delayNode.connect(delayFeedback);
+  delayFeedback.connect(delayNode);
+  delayNode.connect(delayGain);
+  delayGain.connect(masterGainNode);
+  window._delayFeedback = delayFeedback;
+  window._delayGain = delayGain;
+
+  bassFilter.connect(trebleFilter);
+  trebleFilter.connect(masterGainNode);
+  masterGainNode.connect(audioCtx.destination);
+  
+  // Simple reverb via convolver
+  try {
+    convolver = audioCtx.createConvolver();
+    const len = audioCtx.sampleRate * 2;
+    const buf = audioCtx.createBuffer(2, len, audioCtx.sampleRate);
+    for(let c=0;c<2;c++){
+      const d=buf.getChannelData(c);
+      for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.5);
+    }
+    convolver.buffer = buf;
+    const reverbGain = audioCtx.createGain();
+    reverbGain.gain.value = 0;
+    convolver.connect(reverbGain);
+    reverbGain.connect(masterGainNode);
+    window._reverbGain = reverbGain;
+    window._convolver = convolver;
+  } catch(e){}
+}
+
+function getFrequency(semi) {
+  const rootFreq = scaleRoots[currentScale] || 261.63;
+  const octaveOffset = currentOctave - 4;
+  const totalSemi = semi + transposeVal + (octaveOffset * 12);
+  return rootFreq * Math.pow(2, totalSemi / 12);
+}
+
+function playNote(noteId, semi, el) {
+  initAudio();
+  if (activeNodes[noteId]) return;
+  
+  const freq = getFrequency(semi);
+  const osc = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  const gainNode2 = audioCtx.createGain();
+  
+  osc.type = 'sawtooth';
+  osc.frequency.value = freq;
+  
+  // Harmonium-like timbre with harmonics
+  const osc2 = audioCtx.createOscillator();
+  osc2.type = 'sine';
+  osc2.frequency.value = freq * 2;
+  gainNode2.gain.value = 0.2;
+  
+  const bellow = 0.6 + (bellowsSpeed/10)*0.4;
+  gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+  gainNode.gain.linearRampToValueAtTime(bellow, audioCtx.currentTime + 0.03);
+  
+  osc.connect(gainNode);
+  osc2.connect(gainNode2);
+  gainNode.connect(bassFilter);
+  gainNode2.connect(bassFilter);
+  
+  if (convolver && window._convolver) {
+    gainNode.connect(window._convolver);
+  }
+  
+  osc.start();
+  osc2.start();
+  
+  activeNodes[noteId] = {osc, osc2, gainNode, gainNode2};
+  
+  // Visual
+  if (el) {
+    el.classList.add('pressed');
+    if (glowEnabled) el.classList.add('glow-key');
+  }
+  
+  // Bellows animation
+  document.getElementById('bellows').classList.add('active');
+  setTimeout(()=>document.getElementById('bellows').classList.remove('active'), 300);
+  
+  // Particles
+  if (particlesEnabled && el) spawnParticles(el);
+  
+  // Vibration
+  if (vibrationEnabled && navigator.vibrate) navigator.vibrate(30);
+  
+  // EQ visualizer animation
+  animateEQ();
+  
+  // Track pressed keys
+  pressedKeys.add(noteId);
+  updateChordDisplay();
+  
+  // Practice check
+  if (practiceActive && practiceTarget !== null) checkPractice(semi);
+  
+  // Record
+  if (isRecording) {
+    recordedNotes.push({semi, time: Date.now() - recordStartTime, type:'on', noteId});
+  }
+}
+
+function stopNote(noteId, el) {
+  const nodes = activeNodes[noteId];
+  if (!nodes) return;
+  
+  const {osc, osc2, gainNode} = nodes;
+  const rel = 0.05 + (sustain/100)*1.5;
+  gainNode.gain.setValueAtTime(gainNode.gain.value, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + rel);
+  
+  setTimeout(()=>{
+    try { osc.stop(); osc2.stop(); } catch(e){}
+  }, rel*1000+100);
+  
+  delete activeNodes[noteId];
+  
+  if (el) {
+    el.classList.remove('pressed');
+    if (glowEnabled) el.classList.remove('glow-key');
+  }
+  
+  pressedKeys.delete(noteId);
+  updateChordDisplay();
+  
+  if (isRecording) {
+    recordedNotes.push({semi:0, time: Date.now() - recordStartTime, type:'off', noteId});
+  }
+}
+
+// ============================================================
+// KEYBOARD BUILD
+// ============================================================
+function buildKeyboard() {
+  const scroll = document.getElementById('keyboardScroll');
+  scroll.innerHTML = '';
+  
+  const kw = keySize === 'small' ? 36 : keySize === 'large' ? 54 : 44;
+  const kh = keySize === 'small' ? 100 : keySize === 'large' ? 155 : 130;
+  const bkw = Math.round(kw*0.62);
+  const bkh = Math.round(kh*0.6);
+  
+  const totalW = whiteKeys.length * kw;
+  scroll.style.width = totalW + 'px';
+  scroll.style.position = 'relative';
+  
+  // White keys
+  whiteKeys.forEach((k, i) => {
+    const el = document.createElement('div');
+    el.className = 'key-white';
+    el.id = 'key_' + k.note;
+    el.style.width = kw + 'px';
+    el.style.height = kh + 'px';
+    el.style.position = 'absolute';
+    el.style.left = (i * kw) + 'px';
+    el.style.top = '0';
+    el.innerHTML = `<span class="key-label-bn">${k.bn}</span><span class="key-label-en">${k.en}</span>`;
+    
+    el.addEventListener('touchstart', (e)=>{ e.preventDefault(); playNote(k.note, k.semi, el); }, {passive:false});
+    el.addEventListener('touchend', (e)=>{ e.preventDefault(); stopNote(k.note, el); }, {passive:false});
+    el.addEventListener('mousedown', ()=>playNote(k.note, k.semi, el));
+    el.addEventListener('mouseup', ()=>stopNote(k.note, el));
+    el.addEventListener('mouseleave', ()=>{ if(activeNodes[k.note]) stopNote(k.note, el); });
+    
+    scroll.appendChild(el);
+  });
+  
+  // Black keys
+  blackKeys.forEach(k => {
+    const el = document.createElement('div');
+    el.className = 'key-black';
+    el.id = 'key_' + k.note;
+    el.style.width = bkw + 'px';
+    el.style.height = bkh + 'px';
+    const leftPos = (k.pos * kw) + (kw - bkw/2) - bkw/2 + bkw*0.15;
+    el.style.left = leftPos + 'px';
+    el.innerHTML = `<span class="key-label-bn">${k.bn}</span>`;
+    
+    el.addEventListener('touchstart', (e)=>{ e.preventDefault(); playNote(k.note, k.semi, el); }, {passive:false});
+    el.addEventListener('touchend', (e)=>{ e.preventDefault(); stopNote(k.note, el); }, {passive:false});
+    el.addEventListener('mousedown', ()=>playNote(k.note, k.semi, el));
+    el.addEventListener('mouseup', ()=>stopNote(k.note, el));
+    el.addEventListener('mouseleave', ()=>{ if(activeNodes[k.note]) stopNote(k.note, el); });
+    
+    scroll.appendChild(el);
+  });
+  
+  const wrapH = kh + 24;
+  document.getElementById('keyboardWrap').style.minHeight = wrapH + 'px';
+  scroll.style.height = wrapH + 'px';
+}
+
+// ============================================================
+// SETTINGS FUNCTIONS
+// ============================================================
+function toggleSettings() {
+  const panel = document.getElementById('settingsPanel');
+  const toggle = document.getElementById('settingsToggle');
+  const arrow = document.getElementById('settingsArrow');
+  panel.classList.toggle('open');
+  toggle.classList.toggle('open');
+  arrow.textContent = panel.classList.contains('open') ? '▲' : '▼';
+}
+
+function updateVolume(v) {
+  volume = v/100;
+  document.getElementById('volumeVal').textContent = v;
+  if (masterGainNode) masterGainNode.gain.value = volume;
+}
+
+function updateSustain(v) {
+  sustain = v;
+  document.getElementById('sustainVal').textContent = v;
+}
+
+function updateBellows(v) {
+  bellowsSpeed = parseInt(v);
+  document.getElementById('bellowsVal').textContent = v;
+}
+
+function updateReverb(v) {
+  reverbWet = v/100;
+  document.getElementById('reverbVal').textContent = v;
+  if (window._reverbGain) window._reverbGain.gain.value = reverbWet * 0.5;
+  updateStatusPill('reverbStatus', v>0 ? 'Reverb: চালু' : 'Reverb: বন্ধ', v>0);
+}
+
+function updateEcho(v) {
+  echoWet = v/100;
+  document.getElementById('echoVal').textContent = v;
+  if (window._delayGain) window._delayGain.gain.value = echoWet * 0.5;
+  if (window._delayFeedback) window._delayFeedback.gain.value = echoWet * 0.4;
+}
+
+function updateEQ(type, v) {
+  if (type === 'bass') {
+    document.getElementById('bassVal').textContent = v;
+    if (bassFilter) bassFilter.gain.value = parseFloat(v);
+  } else {
+    document.getElementById('trebleVal').textContent = v;
+    if (trebleFilter) trebleFilter.gain.value = parseFloat(v);
+  }
+}
+
+function updateTranspose(v) {
+  transposeVal = parseInt(v);
+  document.getElementById('transposeVal').textContent = v >= 0 ? '+'+v : v;
+}
+
+function setScale(scale, btn) {
+  currentScale = scale;
+  document.querySelectorAll('.scale-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateStatusPill('scaleStatus', 'স্কেল: '+scale, true);
+  updateRagaDisplay(scale);
+  stopAllDrone();
+  if (droneActive) startDrone();
+}
+
+const ragaMap = {
+  'C':'রাগ: ভৈরবী', 'C#':'রাগ: ভৈরব', 'D':'রাগ: কাফি',
+  'D#':'রাগ: তোড়ি', 'E':'রাগ: বিলাওয়াল', 'F':'রাগ: খামাজ',
+  'F#':'রাগ: ভূপালি', 'G':'রাগ: দুর্গা', 'G#':'রাগ: শ্যাম কল্যাণ',
+  'A':'রাগ: যমন', 'A#':'রাগ: বাগেশ্রী', 'B':'রাগ: মালকোষ'
+};
+function updateRagaDisplay(s) {
+  document.getElementById('ragaDisplay').textContent = (ragaMap[s] || 'রাগ: —') + ' (চিহ্নিত)';
+}
+
+function setOctave(oct, btn) {
+  currentOctave = oct;
+  document.querySelectorAll('.octave-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const names = {3:'নিচু',4:'মধ্যম',5:'উঁচু'};
+  updateStatusPill('octaveStatus', 'অক্টেভ: '+names[oct], true);
+  stopAllDrone();
+  if (droneActive) startDrone();
+}
+
+// ============================================================
+// DRONE
+// ============================================================
+function toggleDrone() {
+  droneActive = !droneActive;
+  if (droneActive) startDrone(); else stopAllDrone();
+  document.getElementById('droneBtn').classList.toggle('active', droneActive);
+  document.getElementById('qDrone').classList.toggle('active', droneActive);
+  document.getElementById('droneIndicator').classList.toggle('active', droneActive);
+  updateStatusPill('droneStatus', droneActive ? 'ড্রোন: চালু' : 'ড্রোন: বন্ধ', droneActive);
+}
+
+function setDroneType(t) {
+  droneType = t;
+  if (droneActive) { stopAllDrone(); startDrone(); }
+}
+
+function startDrone() {
+  initAudio();
+  stopAllDrone();
+  
+  const rootFreq = scaleRoots[currentScale] || 261.63;
+  const octaveOffset = currentOctave - 4;
+  const baseFreq = rootFreq * Math.pow(2, octaveOffset);
+  
+  const semis = droneType === 'sapa' ? [0, 7] : [0];
+  semis.forEach(s => {
+    const freq = baseFreq * Math.pow(2, s/12);
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.value = freq;
+    g.gain.value = droneVol * 0.5;
+    osc.connect(g);
+    g.connect(masterGainNode);
+    osc.start();
+    droneOscillators.push({osc, g});
+    
+    // LFO for drone wobble
+    const lfo = audioCtx.createOscillator();
+    const lfoGain = audioCtx.createGain();
+    lfo.frequency.value = 0.5 + droneSpeed * 0.3;
+    lfoGain.gain.value = freq * 0.008;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    lfo.start();
+    droneOscillators.push({osc:lfo, g:lfoGain});
+  });
+}
+
+function stopAllDrone() {
+  droneOscillators.forEach(({osc}) => { try{osc.stop();}catch(e){} });
+  droneOscillators = [];
+}
+
+function updateDroneVol(v) {
+  droneVol = v/100;
+  document.getElementById('droneVolVal').textContent = v;
+  droneOscillators.filter((_, i) => i%2===0).forEach(({g}) => g.gain.value = droneVol * 0.5);
+}
+
+function updateDroneSpeed(v) {
+  droneSpeed = parseInt(v);
+  document.getElementById('droneSpeedVal').textContent = v;
+}
+
+// ============================================================
+// METRONOME
+// ============================================================
+function toggleMetro() {
+  metroActive = !metroActive;
+  if (metroActive) startMetro(); else stopMetro();
+  document.getElementById('metroBtn').classList.toggle('active', metroActive);
+  document.getElementById('qMetro').classList.toggle('active', metroActive);
+  updateStatusPill('metroStatus', metroActive ? 'তাল: চালু' : 'তাল: বন্ধ', metroActive);
+}
+
+function startMetro() {
+  currentBeat = 0;
+  const interval = (60/bpm)*1000;
+  metroInterval = setInterval(tickMetro, interval);
+}
+
+function stopMetro() {
+  clearInterval(metroInterval);
+  document.querySelectorAll('.beat-dot').forEach(d=>d.classList.remove('active'));
+}
+
+function tickMetro() {
+  initAudio();
+  document.querySelectorAll('.beat-dot').forEach(d=>d.classList.remove('active'));
+  document.getElementById('beat'+currentBeat).classList.add('active');
+  
+  // Click sound
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.frequency.value = currentBeat===0 ? 880 : 660;
+  g.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.05);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime+0.06);
+  
+  if (vibrationEnabled && navigator.vibrate) navigator.vibrate(currentBeat===0?50:20);
+  
+  currentBeat = (currentBeat+1)%4;
+}
+
+function updateBPM(v) {
+  bpm = parseInt(v);
+  document.getElementById('bpmVal').textContent = v;
+  if (metroActive) { stopMetro(); startMetro(); }
+}
+
+// ============================================================
+// RECORDING
+// ============================================================
+function toggleRecord() {
+  if (!isRecording) {
+    isRecording = true;
+    recordedNotes = [];
+    recordStartTime = Date.now();
+    recDuration = 0;
+    document.getElementById('recBtn').classList.add('active');
+    document.getElementById('recBtn').textContent = '⏹ থামো';
+    document.getElementById('qRecord').classList.add('active');
+    document.getElementById('recStatusPill').style.display = 'inline-block';
+    recTimerInterval = setInterval(()=>{
+      recDuration++;
+      const m=Math.floor(recDuration/60), s=recDuration%60;
+      document.getElementById('recTime').textContent = m+':'+(s<10?'0':'')+s;
+    }, 1000);
+  } else {
+    isRecording = false;
+    clearInterval(recTimerInterval);
+    document.getElementById('recBtn').classList.remove('active');
+    document.getElementById('recBtn').textContent = '⏺ রেকর্ড';
+    document.getElementById('qRecord').classList.remove('active');
+    document.getElementById('recStatusPill').style.display = 'none';
+    if (recordedNotes.length > 0) {
+      document.getElementById('playBtn').disabled = false;
+    }
+  }
+}
+
+function playRecording() {
+  if (recordedNotes.length === 0) return;
+  recordedNotes.forEach(ev => {
+    const t = setTimeout(()=>{
+      const el = document.getElementById('key_' + ev.noteId);
+      if (ev.type==='on') playNote(ev.noteId, ev.semi, el);
+      else stopNote(ev.noteId, el);
+    }, ev.time);
+    if (playbackTimeout) clearTimeout(playbackTimeout);
+  });
+  
+  if (loopMode) {
+    const totalTime = recordedNotes[recordedNotes.length-1].time + 500;
+    setTimeout(()=>{ if(loopMode) playRecording(); }, totalTime);
+  }
+}
+
+function toggleLoop() {
+  loopMode = !loopMode;
+  document.getElementById('loopBtn').classList.toggle('active', loopMode);
+}
+
+function saveRecording() {
+  // Create offline audio context and render
+  alert('রেকর্ডিং সেভ ফিচার: আপনার ব্রাউজারে সাপোর্ট না থাকলে ডাউনলোড হবে না। নোটেশন কপি করা যাবে।');
+}
+
+function clearRecording() {
+  recordedNotes = [];
+  recDuration = 0;
+  document.getElementById('recTime').textContent = '0:00';
+  document.getElementById('playBtn').disabled = true;
+}
+
+// ============================================================
+// SONG TABS
+// ============================================================
+const songs = {
+  amar_sonar: 'আমার সোনার বাংলা:\nসা সা সা সা | রে গা মা পা | সা রে সা —',
+  ekla_cholo: 'একলা চলো রে:\nনি নি নি নি | সা সা রে গা | মা পা — সা',
+  amar_bhaier: 'আমার ভাইয়ের রক্তে:\nসা রে গা মা | পা মা গা রে | সা — — —',
+  রবীন্দ্র: 'আনন্দলোকে মঙ্গলালোকে:\nপা পা পা পা | ধা নি সা — | রে গা মা পা | সা — — —'
+};
+
+function showSong(key) {
+  const display = document.getElementById('notationDisplay');
+  document.querySelectorAll('.song-tab-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  display.textContent = songs[key] || '';
+  display.classList.add('show');
+}
+
+// ============================================================
+// PRACTICE MODE
+// ============================================================
+function togglePractice() {
+  practiceActive = !practiceActive;
+  document.getElementById('practiceBtn').classList.toggle('active', practiceActive);
+  document.getElementById('practiceBox').classList.toggle('show', practiceActive);
+  document.getElementById('qPractice').classList.toggle('active', practiceActive);
+  if (practiceActive) nextPracticeQuestion();
+}
+
+const practiceNotes = [
+  {name:'সা', semi:0}, {name:'রে', semi:2}, {name:'গা', semi:4},
+  {name:'মা', semi:5}, {name:'পা', semi:7}, {name:'ধা', semi:9}, {name:'নি', semi:11}
+];
+
+function nextPracticeQuestion() {
+  const idx = Math.floor(Math.random() * practiceNotes.length);
+  practiceTarget = practiceNotes[idx];
+  document.getElementById('practiceQ').textContent = '🎵 "'+practiceTarget.name+'" বাজাও';
+  document.getElementById('practiceHint').textContent = 'সঠিক চাবি খুঁজে বাজাও';
+  // Play the note as hint
+  setTimeout(()=>{
+    initAudio();
+    const freq = getFrequency(practiceTarget.semi);
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.frequency.value = freq;
+    g.gain.value = 0.3;
+    osc.connect(g); g.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime+0.6);
+  }, 300);
+}
+
+function checkPractice(semi) {
+  if (!practiceTarget || !practiceActive) return;
+  const target = practiceTarget.semi % 12;
+  const played = semi % 12;
+  if (played === target) {
+    practiceScore++;
+    document.getElementById('practiceHint').textContent = '✅ সঠিক!';
+    if (vibrationEnabled && navigator.vibrate) navigator.vibrate([50,30,50]);
+    document.getElementById('practiceScoreLabel').textContent = 'স্কোর: ' + practiceScore;
+    setTimeout(nextPracticeQuestion, 1000);
+  } else {
+    practiceMiss++;
+    document.getElementById('practiceHint').textContent = '❌ আবার চেষ্টা করো!';
+  }
+  document.getElementById('practiceScoreDisplay').textContent = '✅ সঠিক: '+practiceScore+' | ❌ ভুল: '+practiceMiss;
+}
+
+// ============================================================
+// CHORD MODE
+// ============================================================
+function toggleChordMode() {
+  chordMode = !chordMode;
+  document.getElementById('chordModeBtn').classList.toggle('active', chordMode);
+  document.getElementById('qChord').classList.toggle('active', chordMode);
+  document.getElementById('chordDisplay').textContent = chordMode ? 'কর্ড মোড চালু — একসাথে বাজাও' : 'কোনো চাবি বাজাও নি';
+}
+
+function updateChordDisplay() {
+  if (pressedKeys.size === 0) {
+    document.getElementById('chordDisplay').textContent = 'কোনো চাবি বাজাও নি';
+    return;
+  }
+  const notes = [...pressedKeys].join(' + ');
+  document.getElementById('chordDisplay').textContent = notes;
+}
+
+function saveFavoriteChord() {
+  if (pressedKeys.size === 0) return;
+  const name = [...pressedKeys].map(k=>k.replace(/[0-9]/g,'')).join('+');
+  if (favChords.includes(name)) return;
+  favChords.push(name);
+  renderFavChords();
+}
+
+function renderFavChords() {
+  const c = document.getElementById('favChords');
+  c.innerHTML = '';
+  favChords.forEach(ch => {
+    const b = document.createElement('button');
+    b.className = 'fav-chord-btn';
+    b.textContent = ch;
+    c.appendChild(b);
+  });
+}
+
+// ============================================================
+// THEME
+// ============================================================
+const themes = {
+  1: {dark:'#2c1a08', mid:'#4a2c0f', gold:'#c9952a'},
+  2: {dark:'#0a1a0a', mid:'#1a3a1a', gold:'#60c080'},
+  3: {dark:'#0a0a2a', mid:'#1a1a4a', gold:'#6080e0'},
+  4: {dark:'#2a0a0a', mid:'#4a1a1a', gold:'#e06060'},
+  5: {dark:'#1a1a1a', mid:'#2a2a2a', gold:'#a0a0a0'},
+};
+function setTheme(n, el) {
+  document.querySelectorAll('.swatch').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  currentTheme = n;
+  const t = themes[n];
+  document.documentElement.style.setProperty('--wood-dark', t.dark);
+  document.documentElement.style.setProperty('--wood-mid', t.mid);
+  document.documentElement.style.setProperty('--gold', t.gold);
+}
+
+// ============================================================
+// EFFECTS
+// ============================================================
+function toggleGlow() {
+  glowEnabled = !glowEnabled;
+  document.getElementById('glowBtn').classList.toggle('active', glowEnabled);
+}
+
+function toggleParticles() {
+  particlesEnabled = !particlesEnabled;
+  document.getElementById('particleBtn').classList.toggle('active', particlesEnabled);
+}
+
+function toggleVibration() {
+  vibrationEnabled = !vibrationEnabled;
+  document.getElementById('vibBtn').classList.toggle('active', vibrationEnabled);
+  if (vibrationEnabled && navigator.vibrate) navigator.vibrate(50);
+}
+
+function toggleAutoTune() {
+  autoTune = !autoTune;
+  document.getElementById('autoTuneBtn').classList.toggle('active', autoTune);
+}
+
+function findScale() {
+  const played = [...pressedKeys].map(k=>{
+    const wk = whiteKeys.find(w=>w.note===k);
+    const bk = blackKeys.find(b=>b.note===k);
+    return wk ? wk.semi%12 : bk ? bk.semi%12 : null;
+  }).filter(x=>x!==null);
+  
+  if (played.length < 2) {
+    document.getElementById('scaleFound').textContent = 'কমপক্ষে ২টি বাজাও';
+    return;
+  }
+  
+  const firstSemi = played[0];
+  const scaleName = Object.keys(scaleRoots)[firstSemi] || currentScale;
+  document.getElementById('scaleFound').textContent = scaleName + ' স্কেল সম্ভব';
+}
+
+function setKeySize(size) {
+  keySize = size;
+  buildKeyboard();
+  document.querySelectorAll('.quick-btn').forEach(b=>{
+    if(b.textContent.includes('সাইজ')) b.classList.remove('active');
+  });
+}
+
+// ============================================================
+// PARTICLES
+// ============================================================
+function spawnParticles(el) {
+  if (!particlesEnabled) return;
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/4;
+  const container = document.getElementById('particles');
+  const colors = ['#ffcc00','#ff9900','#ff6600','#ffee88','#ffffff'];
+  
+  for (let i=0; i<5; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 4 + Math.random()*6;
+    const dx = (Math.random()-0.5)*60;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${cx+dx}px;top:${cy}px;
+      animation-duration:${0.8+Math.random()*0.6}s;
+      animation-delay:${Math.random()*0.1}s;
+    `;
+    container.appendChild(p);
+    setTimeout(()=>p.remove(), 1500);
+  }
+}
+
+// ============================================================
+// EQ VISUALIZER
+// ============================================================
+let eqAnimId = null;
+function animateEQ() {
+  const bars = document.querySelectorAll('.eq-bar');
+  let i = 0;
+  function frame() {
+    bars.forEach(b => {
+      const h = 3 + Math.random()*16;
+      b.style.height = h + 'px';
+    });
+    i++;
+    if (i < 20) eqAnimId = requestAnimationFrame(frame);
+    else bars.forEach(b=>b.style.height='4px');
+  }
+  if (eqAnimId) cancelAnimationFrame(eqAnimId);
+  frame();
+}
+
+// ============================================================
+// STATUS PILLS
+// ============================================================
+function updateStatusPill(id, text, active) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.textContent = text;
+    el.classList.toggle('active', active);
+  }
+}
+
+// ============================================================
+// RESET
+// ============================================================
+function resetAll() {
+  // Stop everything
+  Object.keys(activeNodes).forEach(k=>stopNote(k, document.getElementById('key_'+k)));
+  if (droneActive) toggleDrone();
+  if (metroActive) toggleMetro();
+  if (isRecording) toggleRecord();
+  if (practiceActive) togglePractice();
+  
+  // Reset sliders
+  document.getElementById('volumeSlider').value = 80; updateVolume(80);
+  document.getElementById('sustainSlider').value = 60; updateSustain(60);
+  document.getElementById('reverbSlider').value = 0; updateReverb(0);
+  document.getElementById('echoSlider').value = 0; updateEcho(0);
+  document.getElementById('transposeSlider').value = 0; updateTranspose(0);
+  document.getElementById('bassSlider').value = 0; updateEQ('bass',0);
+  document.getElementById('trebleSlider').value = 0; updateEQ('treble',0);
+  document.getElementById('bpmSlider').value = 80; updateBPM(80);
+}
+
+// ============================================================
+// WAKE LOCK (Feature 50)
+// ============================================================
+async function requestWakeLock() {
+  try {
+    if ('wakeLock' in navigator) {
+      await navigator.wakeLock.request('screen');
+    }
+  } catch(e){}
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load', ()=>{
+  buildKeyboard();
+  requestWakeLock();
+  
+  // Enable audio on first touch
+  document.body.addEventListener('touchstart', ()=>{
+    if (!audioCtx) initAudio();
+  }, {once:true});
+});
+
+// Prevent scroll while playing
+document.addEventListener('touchmove', (e)=>{
+  if (e.target.closest('#keyboardWrap')) e.preventDefault();
+}, {passive:false});
+</script>
 </body>
 </html>
